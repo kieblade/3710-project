@@ -30,8 +30,8 @@ output reg [4:0] Flags;
 //Flags[3] carry bit
 //Flags[4] z bit
 
-parameter NORMAL = 0000;
-parameter SHIFT = 1000;
+parameter NORMAL = 4'b0000;
+parameter SHIFT = 4'b1000;
 
 parameter ADD = 4'b0101;
 parameter ADDU = 4'b0110;
@@ -42,7 +42,16 @@ parameter CMP = 4'b1011;
 parameter AND = 4'b0001;
 parameter OR = 4'b0010;
 parameter XOR = 4'b0011;
-parameter LSH = 4'b0100; // to do
+
+// shifts
+parameter LSH = 4'b0100;
+parameter RSH = 4'b1100;
+
+parameter LSHI = 4'b0000;
+parameter RSHI = 4'b0001;
+
+parameter ALSH = 4'b0110;
+parameter ARSH = 4'b1110;
 
 always @(A, B, Opcode)
 begin
@@ -112,21 +121,41 @@ begin
 		endcase
 		end
 	SHIFT:
-		begin
-		case (Opcode[3:0])
-		LSH:
+		// all shift operations set the flags to zeros
+		Flags[4:0] = 5'b00000;
+		casex (Opcode[3:0])
+		// arithmetic and logical left shift are the same
+		ALSH, LSH:
 			begin
-			// to do
+			C = A<<B;
+			end
+		RSH:
+			begin
+			C = A>>B;
+			end
+		ARSH:
+			begin
+			C = A>>>B;
+			end
+		// I'm not certain these are the expected operations.
+		LSHI:
+			begin
+			C = B<<1;
+			end
+		RSHI:
+			begin
+			C = B>>1;
 			end
 		default: 
 			begin
 				C = 16'bxxxxxxxxxxxxxxxx;
-				Flags = 5'b00000;
 			end
 		endcase
 		end
+	// otherwise, it has an immediate value
 	default:
 		begin
+		// the opcode with an immediate matches the op code ext without an immediate
 		case (Opcode[7:4])
 		ADDU:
 			begin
