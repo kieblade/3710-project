@@ -35,8 +35,8 @@ parameter SHIFT = 4'b1000;
 
 parameter ADD = 4'b0101;
 parameter ADDU = 4'b0110;
-parameter ADDC = 4'b0111; // to do x2 also need to figure out carry.
-parameter ADDCU = 4'b0100; // to do x2
+parameter ADDC = 4'b0111;
+parameter ADDCU = 4'b0100;
 parameter SUB = 4'b1001;
 parameter CMP = 4'b1011;
 parameter AND = 4'b0001;
@@ -67,6 +67,13 @@ begin
 			else Flags[4] = 1'b0;
 			Flags[2:0] = 3'b000;
 			end
+		ADDCU:
+			begin
+			{Flags[3], C} = A + B + Flags[3];
+			if (C == 16'b0000000000000000) Flags[4] = 1'b1; 
+			else Flags[4] = 1'b0;
+			Flags[2:0] = 3'b000;
+			end
 		ADD:
 			begin
 			C = A + B;
@@ -76,6 +83,14 @@ begin
 			else Flags[2] = 1'b0;
 			Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 			end
+		ADDC:
+			begin
+			C = A + B + Flags[3];
+			if (C == 16b'0000000000000000) Flags[4] = 1'b1;
+			else Flags[4] = 1'b0;
+			if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1;
+			else Flags[2] = 1'b0;
+			Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		SUB:
 			begin
 			C = A - B;
@@ -123,7 +138,7 @@ begin
 	SHIFT:
 		// all shift operations set the flags to zeros
 		Flags[4:0] = 5'b00000;
-		casex (Opcode[3:0])
+		case (Opcode[3:0])
 		// arithmetic and logical left shift are the same
 		ALSH, LSH:
 			begin
@@ -159,14 +174,38 @@ begin
 		case (Opcode[7:4])
 		ADDU:
 			begin
-			{Flags[3], C} = A + $signed({1'b0, Opcode[3:0], B[3:0]});
+			{Flags[3], C} = A + $signed({8'b00000000, Opcode[3:0], B[3:0]});
+			if (C == 16'b0000000000000000) Flags[4] = 1'b1; 
+			else Flags[4] = 1'b0;
+			Flags[2:0] = 3'b000;
+			end
+		ADDCU
+			begin
+			{Flags[3], C} = A + $signed({8'b00000000, Opcode[3:0], B[3:0]}) + Flags[3];
 			if (C == 16'b0000000000000000) Flags[4] = 1'b1; 
 			else Flags[4] = 1'b0;
 			Flags[2:0] = 3'b000;
 			end
 		ADD:
 			begin
-			C = A + $signed({1'b0, Opcode[3:0], B[3:0]});
+			// perform sign extension on immediate value
+			if (Opcode[3])
+				c = A + $signed(8'b11111111, Opcode[3:0], B[3:0]);
+			else
+				c = A + $signed(8'b00000000, Opcode[3:0], B[3:0]);
+			if (C == 16'b0000000000000000) Flags[4] = 1'b1;
+			else Flags[4] = 1'b0;
+			if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1;
+			else Flags[2] = 1'b0;
+			Flags[1:0] = 2'b00; Flags[3] = 1'b0;
+			end
+		ADDC:
+			begin
+			// perform sign extension on immediate value
+			if (Opcode[3])
+				c = (A + $signed(8'b11111111, Opcode[3:0], B[3:0])) + Flags[3];
+			else
+				c = (A + $signed(8'b00000000, Opcode[3:0], B[3:0])) + Flags[3];
 			if (C == 16'b0000000000000000) Flags[4] = 1'b1;
 			else Flags[4] = 1'b0;
 			if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1;
@@ -175,7 +214,10 @@ begin
 			end
 		SUB:
 			begin
-			C = A - $signed({1'b0, Opcode[3:0], B[3:0]});
+			if (Opcode[3])
+				C = A - $signed({8'b11111111, Opcode[3:0], B[3:0]});
+			else
+				C = A - $signed({8'b00000000, Opcode[3:0], B[3:0]});
 			if (C == 16'b0000000000000000) Flags[4] = 1'b1;
 			else Flags[4] = 1'b0;
 			if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1;
@@ -184,10 +226,36 @@ begin
 			end
 		CMP:
 			begin
-			if( $signed(A) < $signed({1'b0, Opcode[3:0], B[3:0]}) ) Flags[1:0] = 2'b11;
-			else Flags[1:0] = 2'b00;
+			if (Opcode[3])
+				if( $signed(A) < $signed({8'b11111111, Opcode[3:0], B[3:0]}) ) Flags[1:0] = 2'b11;
+				else Flags[1:0] = 2'b00;
+			else
+				if( $signed(A) < $signed({8'b00000000, Opcode[3:0], B[3:0]}) ) Flags[1:0] = 2'b11;
+				else Flags[1:0] = 2'b00;
 			C = 16'b0000000000000000;
 			Flags[4:2] = 3'b000;
+			end
+		// logical operations with immediate zero extend
+		AND:
+			begin
+			C = A & {8'b00000000, Opcode[3:0], B[3:0]};
+			if( C == 16'b0000000000000000 ) Flags[4] = 1'b1; 
+			else Flags[4] = 1'b0;
+			Flags[3:0] = 4'b0000;
+			end
+		OR:
+			begin
+			C = A | {8'b00000000, Opcode[3:0], B[3:0]};
+			if (C == 16'b0000000000000000) Flags[4] = 1'b1;
+			else Flags[4] = 1'b0;
+			Flags[3:0] = 4'b0000;
+			end
+		XOR:
+			begin
+			C = A ^ {8'b00000000, Opcode[3:0], B[3:0]};
+			if( C == 16'b0000000000000000 ) Flags[4] = 1'b1;
+			else Flags[4] = 1'b0;
+			Flags[3:0] = 4'b0000;
 			end
 		default: 
 			begin
