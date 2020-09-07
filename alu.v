@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: Universtiy of Utah
-// Engineer: Seth Jackson
+// Engineer: Scott Crowley, Sam Hirsch, Seth Jackson
 // 
 // Create Date:    12:54:08 08/30/2011 
 // Design Name: 
@@ -35,9 +35,11 @@ parameter ADDC = 4'b0111;
 parameter ADDCU = 4'b0100;
 parameter SUB = 4'b1001;
 parameter CMP = 4'b1011;
+parameter CMPU = 4'b1000; //to do
 parameter AND = 4'b0001;
 parameter OR = 4'b0010;
 parameter XOR = 4'b0011;
+//parameter NOT = 4'b; //to do
 
 // shifts
 parameter LSH = 4'b1100;
@@ -94,6 +96,13 @@ begin
 	CMP:
 		begin
 		if( $signed(A) < $signed(B) ) Flags[1:0] = 2'b11;
+		else Flags[1:0] = 2'b00;
+		C = 16'b0000000000000000;
+		Flags[4:2] = 3'b000;
+		end
+	CMPU:
+		begin
+		if( A < B ) Flags[1:0] = 2'b11;
 		else Flags[1:0] = 2'b00;
 		C = 16'b0000000000000000;
 		Flags[4:2] = 3'b000;

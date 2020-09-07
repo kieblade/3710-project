@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
 ////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
+// Company: Universtiy of Utah
+// Engineer: Scott Crowley, Sam Hirsch, Seth Jackson
 //
 // Create Date:   14:25:01 08/30/2011
 // Design Name:   alu
-// Module Name:   C:/Documents and Settings/Administrator/ALU/alutest.v
+// Module Name:   
 // Project Name:  ALU
 // Target Device:  
 // Tool versions:  
@@ -27,7 +27,7 @@ module alutest;
 	// Inputs
 	reg [15:0] A;
 	reg [15:0] B;
-	reg [7:0] Opcode;
+	reg [3:0] Opcode;
 
 	// Outputs
 	wire [15:0] C;
@@ -52,7 +52,7 @@ module alutest;
 		// Initialize Inputs
 		A = 0;
 		B = 0;
-		Opcode = 8'b00000101;
+		Opcode = 8'b0101;
 
 		// Wait 100 ns for global reset to finish
 /*****
@@ -80,9 +80,43 @@ module alutest;
 			//$display("A: %0d, Imm: %0d, C: %0d, Flags[4:0]: %b, time:%0d", A, $signed({1'b0, Opcode[3:0], B[3:0]}), C, Flags[4:0], $time );
 		end
 		
+		$display("testing CMPU ...");
+		#10
+		Opcode = 8'b1000;
+		A = 16'b0000000000000000; B = 16'b0000000000000000;
+		
+		for( i = 0; i< 10; i = i+ 1)
+		begin
+			#10
+			A = $random % 16;
+			B = $random % 16;
+			#10
+			$display("A: %b, B: %b, C: %b, Flags[4:0]: %b, time:%0d", A, B, C, Flags[4:0], $time );
+		end
+		
+		#10
+		A = 16'b0000000000000000; B = 16'b0000000000000000;
+		#10
+		$display("A: %b, B: %b, C: %b, Flags[4:0]: %b, time:%0d", A, B, C, Flags[4:0], $time );
+		
+		#10
+		A = 16'b1111111111111111; B = 16'b1111111111111111;
+		#10
+		$display("A: %b, B: %b, C: %b, Flags[4:0]: %b, time:%0d", A, B, C, Flags[4:0], $time );
+		
+		#10
+		A = 16'b0000000000000000; B = 16'b1111111111111111;
+		#10
+		$display("A: %b, B: %b, C: %b, Flags[4:0]: %b, time:%0d", A, B, C, Flags[4:0], $time );
+		
+		#10
+		A = 16'b1111111111111111; B = 16'b0000000000000000;
+		#10
+		$display("A: %b, B: %b, C: %b, Flags[4:0]: %b, time:%0d", A, B, C, Flags[4:0], $time );
+		
 		$display("testing AND ...");
 		#10
-		Opcode = 8'b00000001;
+		Opcode = 8'b0001;
 		A = 16'b0000000000000000; B = 16'b0000000000000000;
 		
 		for( i = 0; i< 10; i = i+ 1)
@@ -116,7 +150,7 @@ module alutest;
 		
 		$display("testing OR ...");
 		#10
-		Opcode = 8'b00000010;
+		Opcode = 8'b0010;
 		A = 16'b0000000000000000; B = 16'b0000000000000000;
 		
 		for( i = 0; i< 10; i = i+ 1)
@@ -150,7 +184,7 @@ module alutest;
 		
 		$display("testing XOR ...");
 		#10
-		Opcode = 8'b00000011;
+		Opcode = 8'b0011;
 		A = 16'b0000000000000000; B = 16'b0000000000000000;
 		
 		for( i = 0; i< 10; i = i+ 1)
