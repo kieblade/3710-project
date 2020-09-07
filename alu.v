@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module alu( A, B, C, Opcode, Flags);
 input [15:0] A, B;
-input [3:0] Opcode;
+input [7:0] Opcode;
 output reg [15:0] C;
 output reg [4:0] Flags;
 
@@ -29,29 +29,47 @@ output reg [4:0] Flags;
 //Flags[2] flag bit (overflow)
 //Flags[3] carry bit
 //Flags[4] z bit
-parameter ADD = 4'b0101;
-parameter ADDU = 4'b0110;
-parameter ADDC = 4'b0111;
-parameter ADDCU = 4'b0100;
-parameter SUB = 4'b1001;
-parameter CMP = 4'b1011;
-parameter CMPU = 4'b1000; //to do
-parameter AND = 4'b0001;
-parameter OR = 4'b0010;
-parameter XOR = 4'b0011;
+parameter ADD = 8'b00000101;
+parameter ADDI = 8'b01010000;
+parameter ADDU = 8'b00000110;
+parameter ADDUI = 8'b01100000;
+parameter ADDC = 8'b00000111;
+parameter ADDCI = 8'b01110000;
+parameter ADDCU = 8'b00000100;
+parameter ADDCUI = 8'b01000000;
+parameter SUB = 8'b00001001;
+parameter SUBI = 8'b10010000;
+parameter CMP = 8'b00001011;
+parameter CMPI = 8'b10110000;
+parameter CMPU = 8'b00001000; 
+parameter CMPUI = 8'b00001100;
+
+parameter AND = 8'b00000001;
+parameter ANDI = 8'b00010000;
+
+parameter OR = 8'b00000010;
+parameter ORI = 8'b00100000;
+parameter XOR = 8'b00000011;
+parameter XORI = 8'b00110000;
+parameter NOT = 8'b00001111;
 //parameter NOT = 4'b; //to do
 
 // shifts
-parameter LSH = 4'b1100;
-parameter RSH = 4'b1101;
+parameter LSH = 8'b10000100;
+parameter LSHI = 8'b10000000;
+parameter RSH = 8'b10000101;
+parameter RSHI = 8'b10000001;
 
-parameter ALSH = 4'b1110;
-parameter ARSH = 4'b1111;
+parameter ALSH = 8'b10000110;
+parameter ALSHI = 8'b10000010;
+parameter ARSH = 8'b10000111;
+parameter ARSHI = 8'b10000011;
 
 always @(A, B, Opcode)
 begin
 	case (Opcode)
 	ADDU:
+	ADDUI:
 		begin
 		{Flags[3], C} = A + B;
 		// perhaps if ({Flags[3], C} == 5'b00000) ....
@@ -60,6 +78,7 @@ begin
 		Flags[2:0] = 3'b000;
 		end
 	ADDCU:
+	ADDCUI:
 		begin
 		{Flags[3], C} = A + B + Flags[3];
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1; 
@@ -67,6 +86,7 @@ begin
 		Flags[2:0] = 3'b000;
 		end
 	ADD:
+	ADDI:
 		begin
 		C = A + B;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
@@ -76,6 +96,7 @@ begin
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
 	ADDC:
+	ADDCI:
 		begin
 		C = A + B + Flags[3];
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
@@ -85,6 +106,7 @@ begin
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
 	SUB:
+	SUBI:
 		begin
 		C = A - B;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
@@ -94,6 +116,7 @@ begin
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
 	CMP:
+	CMPI:
 		begin
 		if( $signed(A) < $signed(B) ) Flags[1:0] = 2'b11;
 		else Flags[1:0] = 2'b00;
@@ -101,6 +124,7 @@ begin
 		Flags[4:2] = 3'b000;
 		end
 	CMPU:
+	CMPUI:
 		begin
 		if( A < B ) Flags[1:0] = 2'b11;
 		else Flags[1:0] = 2'b00;
@@ -108,6 +132,7 @@ begin
 		Flags[4:2] = 3'b000;
 		end
 	AND:
+	ANDI:
 		begin
 		C = A & B;
 		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1; 
@@ -115,6 +140,7 @@ begin
 		Flags[3:0] = 4'b0000;
 		end
 	OR:
+	ORI:
 		begin
 		C = A | B;
 		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1;
@@ -122,29 +148,40 @@ begin
 		Flags[3:0] = 4'b0000;
 		end
 	XOR:
+	XORI:
 		begin
 		C = A ^ B;
 		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1;
 		else Flags[4] = 1'b0;
 		Flags[3:0] = 4'b0000;
 		end
-	// arithmetic and logical left shift are the same
+	NOT:
+		begin
+		C = ~A;
+		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1;
+		else Flags[4] = 1'b0;
+		Flags[3:0] = 4'b0000;
+		end
 	ALSH:
+	ALSHI:
 		begin
 		C = A<<<B;
 		Flags[4:0] = 5'b00000;
 		end
 	LSH:
+	LSHI:
 		begin
 		C = A<<B;
 		Flags[4:0] = 5'b00000;
 		end
 	RSH:
+	RSHI:
 		begin
 		C = A>>B;
 		Flags[4:0] = 5'b00000;
 		end
 	ARSH:
+	ARSHI:
 		begin
 		C = A>>>B;
 		Flags[4:0] = 5'b00000;
