@@ -18,8 +18,9 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module alu( A, B, C, Opcode, Flags);
+module alu( A, B, carryIn, C, Opcode, Flags);
 input [15:0] A, B;
+input carryIn;
 input [7:0] Opcode;
 output reg [15:0] C;
 output reg [4:0] Flags;
@@ -65,11 +66,10 @@ parameter ALSHI = 8'b10000010;
 parameter ARSH = 8'b10000111;
 parameter ARSHI = 8'b10000011;
 
-always @(A, B, Opcode)
+always @(A, B, carryIn, Opcode)
 begin
 	case (Opcode)
-	ADDU:
-	ADDUI:
+	ADDU, ADDUI:
 		begin
 		{Flags[3], C} = A + B;
 		// perhaps if ({Flags[3], C} == 5'b00000) ....
@@ -77,16 +77,14 @@ begin
 		else Flags[4] = 1'b0;
 		Flags[2:0] = 3'b000;
 		end
-	ADDCU:
-	ADDCUI:
+	ADDCU, ADDCUI:
 		begin
-		{Flags[3], C} = A + B + Flags[3];
+		{Flags[3], C} = A + B + carryIn;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1; 
 		else Flags[4] = 1'b0;
 		Flags[2:0] = 3'b000;
 		end
-	ADD:
-	ADDI:
+	ADD, ADDI:
 		begin
 		C = A + B;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
@@ -95,18 +93,16 @@ begin
 		else Flags[2] = 1'b0;
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
-	ADDC:
-	ADDCI:
+	ADDC, ADDCI:
 		begin
-		C = A + B + Flags[3];
+		C = A + B + carryIn;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
 		else Flags[4] = 1'b0;
 		if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1;
 		else Flags[2] = 1'b0;
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
-	SUB:
-	SUBI:
+	SUB, SUBI:
 		begin
 		C = A - B;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
@@ -115,40 +111,35 @@ begin
 		else Flags[2] = 1'b0;
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
-	CMP:
-	CMPI:
+	CMP, CMPI:
 		begin
 		if( $signed(A) < $signed(B) ) Flags[1:0] = 2'b11;
 		else Flags[1:0] = 2'b00;
 		C = 16'b0000000000000000;
 		Flags[4:2] = 3'b000;
 		end
-	CMPU:
-	CMPUI:
+	CMPU, CMPUI:
 		begin
 		if( A < B ) Flags[1:0] = 2'b11;
 		else Flags[1:0] = 2'b00;
 		C = 16'b0000000000000000;
 		Flags[4:2] = 3'b000;
 		end
-	AND:
-	ANDI:
+	AND, ANDI:
 		begin
 		C = A & B;
 		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1; 
 		else Flags[4] = 1'b0;
 		Flags[3:0] = 4'b0000;
 		end
-	OR:
-	ORI:
+	OR, ORI:
 		begin
 		C = A | B;
 		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1;
 		else Flags[4] = 1'b0;
 		Flags[3:0] = 4'b0000;
 		end
-	XOR:
-	XORI:
+	XOR, XORI:
 		begin
 		C = A ^ B;
 		if( C == 16'b0000000000000000 ) Flags[4] = 1'b1;
@@ -162,26 +153,22 @@ begin
 		else Flags[4] = 1'b0;
 		Flags[3:0] = 4'b0000;
 		end
-	ALSH:
-	ALSHI:
+	ALSH, ALSHI:
 		begin
 		C = A<<<B;
 		Flags[4:0] = 5'b00000;
 		end
-	LSH:
-	LSHI:
+	LSH, LSHI:
 		begin
 		C = A<<B;
 		Flags[4:0] = 5'b00000;
 		end
-	RSH:
-	RSHI:
+	RSH, RSHI:
 		begin
 		C = A>>B;
 		Flags[4:0] = 5'b00000;
 		end
-	ARSH:
-	ARSHI:
+	ARSH, ARSHI:
 		begin
 		C = A>>>B;
 		Flags[4:0] = 5'b00000;

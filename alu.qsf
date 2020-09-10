@@ -37,8 +37,8 @@
 
 
 set_global_assignment -name FAMILY "Cyclone V"
-set_global_assignment -name DEVICE 5CGXFC7C7F23C8
-set_global_assignment -name TOP_LEVEL_ENTITY alu
+set_global_assignment -name DEVICE 5CSEMA5F31C6
+set_global_assignment -name TOP_LEVEL_ENTITY Lab1
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "13:28:15  SEPTEMBER 04, 2020"
 set_global_assignment -name LAST_QUARTUS_VERSION "16.1.0 Lite Edition"
@@ -49,11 +49,61 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
-set_global_assignment -name VERILOG_FILE alutest.v
-set_global_assignment -name VERILOG_FILE alu.v
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_location_assignment PIN_Y16 -to B[3]
+set_location_assignment PIN_W15 -to B[2]
+set_location_assignment PIN_AA15 -to B[1]
+set_location_assignment PIN_AA14 -to B[0]
+set_location_assignment PIN_W17 -to Flags[4]
+set_location_assignment PIN_V18 -to Flags[3]
+set_location_assignment PIN_V17 -to Flags[2]
+set_location_assignment PIN_W16 -to Flags[1]
+set_location_assignment PIN_V16 -to Flags[0]
+set_location_assignment PIN_AC9 -to Opcode[7]
+set_location_assignment PIN_AE11 -to Opcode[6]
+set_location_assignment PIN_AD12 -to Opcode[5]
+set_location_assignment PIN_AD11 -to Opcode[4]
+set_location_assignment PIN_AF10 -to Opcode[3]
+set_location_assignment PIN_AF9 -to Opcode[2]
+set_location_assignment PIN_AC12 -to Opcode[1]
+set_location_assignment PIN_AB12 -to Opcode[0]
+set_location_assignment PIN_AB22 -to z[27]
+set_location_assignment PIN_AB25 -to z[26]
+set_location_assignment PIN_AB28 -to z[25]
+set_location_assignment PIN_AC25 -to z[24]
+set_location_assignment PIN_AD25 -to z[23]
+set_location_assignment PIN_AC27 -to z[22]
+set_location_assignment PIN_AD26 -to z[21]
+set_location_assignment PIN_AC30 -to z[20]
+set_location_assignment PIN_AC29 -to z[19]
+set_location_assignment PIN_AD30 -to z[18]
+set_location_assignment PIN_AC28 -to z[17]
+set_location_assignment PIN_AD29 -to z[16]
+set_location_assignment PIN_AE29 -to z[15]
+set_location_assignment PIN_AB23 -to z[14]
+set_location_assignment PIN_AD27 -to z[13]
+set_location_assignment PIN_AF30 -to z[12]
+set_location_assignment PIN_AF29 -to z[11]
+set_location_assignment PIN_AG30 -to z[10]
+set_location_assignment PIN_AH30 -to z[9]
+set_location_assignment PIN_AH29 -to z[8]
+set_location_assignment PIN_AJ29 -to z[7]
+set_location_assignment PIN_AH28 -to z[6]
+set_location_assignment PIN_AG28 -to z[5]
+set_location_assignment PIN_AF28 -to z[4]
+set_location_assignment PIN_AG27 -to z[3]
+set_location_assignment PIN_AE28 -to z[2]
+set_location_assignment PIN_AE27 -to z[1]
+set_location_assignment PIN_AE26 -to z[0]
+set_global_assignment -name VERILOG_FILE Lab1.v
+set_global_assignment -name VERILOG_FILE hexTo7Seg.v
+set_global_assignment -name VERILOG_FILE alu_Input.v
+set_global_assignment -name VERILOG_FILE alutest.v
+set_global_assignment -name VERILOG_FILE alu.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_AD10 -to carryIn
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name SDC_FILE output_files/alu.sdc

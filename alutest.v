@@ -27,6 +27,7 @@ module alutest;
 	// Inputs
 	reg [15:0] A;
 	reg [15:0] B;
+	reg carryIn;
 	reg [3:0] Opcode;
 
 	// Outputs
@@ -38,6 +39,7 @@ module alutest;
 	alu uut (
 		.A(A), 
 		.B(B), 
+		.carryIn(carryIn),
 		.C(C), 
 		.Opcode(Opcode), 
 		.Flags(Flags)
@@ -52,6 +54,7 @@ module alutest;
 		// Initialize Inputs
 		A = 0;
 		B = 0;
+		carryIn = 0;
 		Opcode = 8'b0101;
 
 		// Wait 100 ns for global reset to finish
