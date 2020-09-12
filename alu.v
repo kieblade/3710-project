@@ -66,6 +66,8 @@ parameter ALSHI = 8'b10000010;
 parameter ARSH = 8'b10000111;
 parameter ARSHI = 8'b10000011;
 
+parameter NOP = 8'b00000000;
+
 always @(A, B, carryIn, Opcode)
 begin
 	case (Opcode)
@@ -172,6 +174,9 @@ begin
 		begin
 		C = A>>>B;
 		Flags[4:0] = 5'b00000;
+		end
+	NOP:
+	   begin
 		end
 	default:
 		begin

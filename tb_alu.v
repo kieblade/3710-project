@@ -242,6 +242,72 @@ module tb_alu();
 			$display("= %b\n", C);
 		end
 		
+		
+		//Random LSH Simulation
+		Opcode = 8'b10000100; #50
+		$display("\n ********* LSH *********");
+		for( i = 0; i < 10; i = i + 1) begin
+			A = $random % 65536;
+			B = $random % 16; #50
+			$display("  %b << %0d", A, B);
+			$display("= %b\n", C);
+		end
+		
+		
+		//Random LSHI Simulation
+		Opcode = 8'b10000000; #50
+		$display("\n ********* LSHI ********");
+		for( i = 0; i < 10; i = i + 1) begin
+			A = $random % 65536;
+			B = $random % 16; #50
+			$display("  %b << %0d", A, B);
+			$display("= %b\n", C);
+		end
+		
+		
+		//Random RSH Simulation
+		Opcode = 8'b10000101; #50
+		$display("\n ********* RSH *********");
+		for( i = 0; i < 10; i = i + 1) begin
+			A = $random % 65536;
+			B = $random % 16; #50
+			$display("  %b >> %0d", A, B);
+			$display("= %b\n", C);
+		end
+		
+		
+		//Random RSHI Simulation
+		Opcode = 8'b10000001; #50
+		$display("\n ********* RSHI ********");
+		for( i = 0; i < 10; i = i + 1) begin
+			A = $random % 65536;
+			B = $random % 16; #50
+			$display("  %b >> %0d", A, B);
+			$display("= %b\n", C);
+		end
+		
+		
+		//Random ALSH Simulation
+		Opcode = 8'b10000110; #50
+		$display("\n ********* ALSH ********");
+		for( i = 0; i < 10; i = i + 1) begin
+			A = $random % 65536;
+			B = $random % 16; #50
+			$display("  %b <<< %0d", A, B);
+			$display("= %b\n", C);
+		end
+		
+		
+		//Random ARSH Simulation
+		Opcode = 8'b10000111; #50
+		$display("\n ********* ARSH ********");
+		for( i = 0; i < 10; i = i + 1) begin
+			A = $random % 65536;
+			B = $random % 16; #50
+			$display("  %b >>> %0d", A, B);
+			$display("= %b\n", C);
+		end
+		
 		// Cont...
 
 	end
