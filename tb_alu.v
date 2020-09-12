@@ -308,8 +308,94 @@ module tb_alu();
 			$display("= %b\n", C);
 		end
 		
-		// Cont...
-
+		
+		// ADD Simulation w/ Corner Cases
+		Opcode = 8'b00000101;
+		$display(" ********* ADD *********   FLAGS:");
+		$display("                           ZCOLN");
+		A = 0;
+		B = 0; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 32000;
+		B = 767; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -768;
+		B = -32000; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 32767;
+		B = 1; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -1;
+		B = -32768; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 10;
+		B = -10; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		
+		
+		// ADDU Simulation w/ Corner Cases
+		Opcode = 8'b00000110;
+		$display("\n ********* ADDU ********   FLAGS:");
+		$display("                           ZCOLN");
+		A = 0;
+		B = 0; #50
+		$display("%d + %d = %d      %b", $unsigned(A), $unsigned(B), $unsigned(C), Flags[4:0]);
+		A = 65000;
+		B = 535; #50
+		$display("%d + %d = %d      %b", $unsigned(A), $unsigned(B), $unsigned(C), Flags[4:0]);
+		A = 1;
+		B = 65535; #50
+		$display("%d + %d = %d      %b", $unsigned(A), $unsigned(B), $unsigned(C), Flags[4:0]);
+		
+		
+		// ADDC Simulation w/ Corner Cases
+		Opcode = 8'b00000111;
+		$display("\n ********* ADDC ********   FLAGS:");
+		$display("                           ZCOLN");
+		A = 0;
+		B = 0; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 0;
+		B = -1; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 32000;
+		B = 766; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -769;
+		B = -32000; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 32767;
+		B = 0; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -2;
+		B = -32768; #50
+		$display("%d + %d = %d   %b", A, B, C, Flags[4:0]);
+		
+		
+		// SUB Simulation w/ Corner Cases
+		Opcode = 8'b00001001;
+		$display("\n ********* SUB *********   FLAGS:");
+		$display("                           ZCOLN");
+		A = 0;
+		B = 0; #50
+		$display("%d - %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 32000;
+		B = -767; #50
+		$display("%d - %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -768;
+		B = 32000; #50
+		$display("%d - %d = %d   %b", A, B, C, Flags[4:0]);
+		A = 32767;
+		B = -1; #50
+		$display("%d - %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -32768;
+		B = 1; #50
+		$display("%d - %d = %d   %b", A, B, C, Flags[4:0]);
+		A = -5;
+		B = -5; #50
+		$display("%d - %d = %d   %b", A, B, C, Flags[4:0]);
+		
+		
 	end
       
 endmodule
