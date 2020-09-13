@@ -109,7 +109,7 @@ begin
 		C = A - B;
 		if (C == 16'b0000000000000000) Flags[4] = 1'b1;
 		else Flags[4] = 1'b0;
-		if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1;
+		if( (~A[15] & B[15] & C[15]) | (A[15] & ~B[15] & ~C[15]) ) Flags[2] = 1'b1;
 		else Flags[2] = 1'b0;
 		Flags[1:0] = 2'b00; Flags[3] = 1'b0;
 		end
@@ -172,7 +172,7 @@ begin
 		end
 	ARSH, ARSHI:
 		begin
-		C = A>>>B;
+		C = $signed(A)>>>B;
 		Flags[4:0] = 5'b00000;
 		end
 	NOP:
