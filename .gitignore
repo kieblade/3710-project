@@ -48,4 +48,5 @@ output_files
 *~
 *example*
 *sopc_*
+*.zip # no archives
 PLLJ_PLLSPE_INFO.txt # The generated PLL specification file

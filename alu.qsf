@@ -107,4 +107,3 @@ set_global_assignment -name VERILOG_FILE hexTo7Seg.v
 set_global_assignment -name VERILOG_FILE alu_Input.v
 set_global_assignment -name VERILOG_FILE alutest.v
 set_global_assignment -name VERILOG_FILE alu.v
-set_global_assignment -name SDC_FILE output_files/alu.sdc
