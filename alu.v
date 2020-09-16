@@ -115,17 +115,17 @@ begin
 		end
 	CMP, CMPI:
 		begin
-		if( $signed(A) < $signed(B) ) Flags[1:0] = 2'b11;
-		else Flags[1:0] = 2'b00;
+		if( $signed(A) < $signed(B) ) Flags[4:0] = 5'b00011;
+		else if (A == B) Flags[4:0] = 5'b10000;
+		else Flags[4:0] = 5'b00000;
 		C = 16'b0000000000000000;
-		Flags[4:2] = 3'b000;
 		end
 	CMPU, CMPUI:
 		begin
-		if( A < B ) Flags[1:0] = 2'b11;
-		else Flags[1:0] = 2'b00;
+		if( A < B ) Flags[4:0] = 5'b00011;
+		else if (A == B) Flags[4:0] = 5'b10000;
+		else Flags[4:0] = 2'b00000;
 		C = 16'b0000000000000000;
-		Flags[4:2] = 3'b000;
 		end
 	AND, ANDI:
 		begin
