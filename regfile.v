@@ -29,7 +29,7 @@ module regfile(ALUBus, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r1
 				r[i]<= 4'd0;
 			else
 				if(regEnable[i]==1'b1)
-				r[i] <= ALUBus;
+					r[i] <= ALUBus;
 				//else
 				//r[i] <= r[i];
 		end
