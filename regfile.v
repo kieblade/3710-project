@@ -1,23 +1,12 @@
 // Given below is a 2D-memory array implementation 
-// For simplicity, I'm designing a 4-bitX4  memory
 module regfile(ALUBus, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, regEnable, clk, reset);
 	input clk, reset;
 	input [15:0] ALUBus;
 	input [15:0] regEnable;
-	// 4 instances (r0 to r3) of 4-bit registers
+	
 	output [15:0] r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15; 
-	reg [15:0] r [0:15]; // 2-dimensional memory
-
-        // The syntax for the above 2D-array is:
-        // reg [DATA_WIDTH - 1: 0] r [0: NUM_WORDS-1]
-
-   
-	/********
-	Unfortunately, verilog does not allow  the following
-	declaration where the 2D memory cannot be  declared as 
-	an IO port
-	// output reg [3:0] r [0:3];
-	*********/
+	reg [15:0] r [0:15];
+	
 	genvar i;
 	
 	generate
