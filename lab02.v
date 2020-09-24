@@ -4,8 +4,11 @@ module lab02 (
 	input clk,
 	input rst,
 	input [7:0] imm8,
-	output [6:0] dsp_7seg,
-	output [4:0] flags
+	output [6:0] dsp_7seg_0,
+	output [6:0] dsp_7seg_1,
+	output [6:0] dsp_7seg_2,
+	output [6:0] dsp_7seg_3,
+	output [4:0] flagLEDs
 );
 	
 	reg [15:0] imm16;
@@ -20,6 +23,7 @@ module lab02 (
 					// ^Is there a cleaner way to do this?
 					
 	wire [15:0] muxA_to_aluA, muxB_to_muxImm, muxImm_to_aluB, bus;
+	wire [4:0] ALU_to_flagsReg;
 	
 	
 	fsm fib_fsm (
@@ -109,8 +113,49 @@ module lab02 (
 	);
 	
 	
-	// TODO: Bring in the modules—alu, flagsReg, & hexTo7Seg.
-	//       Make pin assignments.
+	alu ALU (
+		.A (muxA_to_aluA),
+		.B (muxImm_to_aluB),
+		.carryIn (), // Not using carryIn for now.
+		.Opcode (fsm_to_ALU),
+		.C (bus),
+		.Flags (ALU_to_flagsReg)
+	);
+	
+	
+	flagsReg FlagReg(
+		.clk (clk),
+		.reset (rst),
+		.D (ALU_to_flagsReg),
+		.r (flagLEDs)
+	);
+	
+	
+	hexTo7Seg hex0(
+		.x (r15_to_mux[3:0]),
+		.z (dsp_7seg_0)
+	);
+	
+	
+	hexTo7Seg hex1(
+		.x (r15_to_mux[7:4]),
+		.z (dsp_7seg_1)
+	);
+	
+	
+	hexTo7Seg hex2(
+		.x (r15_to_mux[11:8]),
+		.z (dsp_7seg_2)
+	);
+	
+	
+	hexTo7Seg hex3(
+		.x (r15_to_mux[15:12]),
+		.z (dsp_7seg_3)
+	);
+	
+	
+	// TODO: Make pin assignments.
 	//       Define any continuous assign statements (such as imm8-to-imm16).
 	
 endmodule
