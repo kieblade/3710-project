@@ -3,10 +3,10 @@
 module fsm (clk, rst, regEn, muxA, muxB, muxBimm, Opcode);
 
 	input clk, rst;
-	output [15:0] regEn;
-	output [3:0] muxA, muxB;
-	output muxBimm;
-	output [7:0] Opcode;
+	output reg [15:0] regEn;
+	output reg [3:0] muxA, muxB;
+	output reg muxBimm;
+	output reg [7:0] Opcode;
 	
 	reg [4:0] state; 
 	parameter [4:0] S0 = 5'd0, S1  = 5'd1,  S2  = 5'd2,  S3  = 5'd3,  S4  = 5'd4,  S5  = 5'd5,  S6  = 5'd6,  S7  = 5'd7, S8 = 5'd8,
@@ -177,7 +177,7 @@ module fsm (clk, rst, regEn, muxA, muxB, muxBimm, Opcode);
 					regEn   = 16'd0;    // Block all registers
 					muxA    = 4'bx;     // Don't care about MUX A
 					muxB    = 4'bx;     // Don't care about MUX B
-					muxBimm = 0;        // Don't care about imm
+					muxBimm = 1'bx;     // Don't care about imm
 					Opcode  = NOP;      // No operation
 				end
 			default:
@@ -185,8 +185,8 @@ module fsm (clk, rst, regEn, muxA, muxB, muxBimm, Opcode);
 					regEn   = 16'bx;
 					muxA    = 4'bx;
 					muxB    = 4'bx;
-					muxBimm = 0;
-					Opcode  = NOP;
+					muxBimm = 1'bx;
+					Opcode  = 8'bx;
 				end
 		endcase
 	
