@@ -11,7 +11,7 @@ module lab02 (
 	output [4:0] flagLEDs
 );
 	
-	reg [15:0] imm16;
+	wire [15:0] imm16;
 	
 	wire [15:0] fsm_to_regfile;
 	wire [3:0] fsm_to_muxA, fsm_to_muxB;
@@ -155,7 +155,8 @@ module lab02 (
 	);
 	
 	
+	assign imm16 = $signed(imm8);
+	
 	// TODO: Make pin assignments.
-	//       Define any continuous assign statements (such as imm8-to-imm16).
 	
 endmodule
