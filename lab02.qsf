@@ -67,7 +67,6 @@ set_global_assignment -name VERILOG_FILE lab02.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_location_assignment PIN_AE12 -to rst
 set_location_assignment PIN_AB12 -to imm8[0]
 set_location_assignment PIN_AC12 -to imm8[1]
@@ -111,3 +110,5 @@ set_location_assignment PIN_AC25 -to dsp_7seg_3[3]
 set_location_assignment PIN_AB28 -to dsp_7seg_3[4]
 set_location_assignment PIN_AB25 -to dsp_7seg_3[5]
 set_location_assignment PIN_AB22 -to dsp_7seg_3[6]
+set_global_assignment -name SDC_FILE lab02.sdc
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

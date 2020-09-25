@@ -31,7 +31,7 @@ case(x)
 	4'b1100 : 			//Hexadecimal C
 	z = ~7'b1011000;
 	4'b1101 : 			//Hexadecimal D
-	z = ~7'b1111100;
+	z = ~7'b0100001;
 	4'b1110 : 			//Hexadecimal E
 	z = ~7'b1111001;
 	4'b1111 : 			//Hexadecimal F	
