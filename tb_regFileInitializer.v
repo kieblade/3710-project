@@ -13,7 +13,7 @@ module tb_regFileInitializer();
 	
 	integer i, j;
 	
-	parameter verbose = 1;
+	parameter verbose = 0;
 	
 	parameter ADD = 8'b00000101;
 	parameter ADDI = 8'b01010000;
@@ -142,13 +142,14 @@ module tb_regFileInitializer();
 		for (i = 0; i < 16; i = i + 1) begin
 			for (j = 0; j < 10; j = j + 1) begin
 				temp = $random % 65536;
-				if (verbose) $display("Loading %d into r%d", temp, i);
+				temp1 = $random % 16;
+				if (verbose) $display("Loading %d into r%d", temp, temp1);
 				
-				load(i, temp);
+				load(temp1, temp);
 				#10
 				
-				if (verbose) $display("Loaded %d from r%d", valFromReg(i), i);
-				if (valFromReg(i) != temp) $display("Error! Expected %d, got %d. In simple load", temp, valFromReg(i));
+				if (verbose) $display("Loaded %d from r%d", valFromReg(i), temp1);
+				if (valFromReg(temp1) != temp) $display("Error! Expected %d, got %d. In simple load", temp, valFromReg(i));
 			end
 		end
 		
@@ -407,6 +408,40 @@ module tb_regFileInitializer();
 				if (verbose) $display("Resulted in %b", $signed(valFromReg(i)));
 				if (valFromReg(i) != ~temp) $display("Error! Expected %b, but got %b", ~temp, valFromReg(i));
 			end
+		end
+		
+		// fibonnacci sequence
+		$display("Running fibonnacci sequence");
+		load(0, 0);
+		#10;
+		load(1, 1);
+		#10;
+		for (i = 0; i < 23; i = i + 1) begin
+			useImm = 0;
+			regEnable = 16'b0000000000000001 << ((i + 2) % 16);
+			opCode = ADDU;
+			a_select = i % 16;
+			b_select = (i + 1) % 16;
+			#10;
+			
+			$display("%d", valFromReg((i + 2) % 16));
+		end
+		
+		// squaring numbers
+		$display("Square number sequence");
+		for (i = 0; i < 10; i = i + 1) begin
+			load(i % 16, i);
+			#10;
+			
+			for (j = 1; j < i; j = j + 1) begin
+				useImm = 0; 
+				regEnable = 16'b0000000000000001 << (i % 16);
+				opCode = ADDU;
+				a_select = i % 16;
+				b_select = i % 16;
+				#10;
+			end
+			$display("%d", valFromReg(i % 16));
 		end
 		
 		$display("Testbench ends!");
