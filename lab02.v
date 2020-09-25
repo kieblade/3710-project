@@ -18,13 +18,7 @@ module lab02 (
 	wire fsm_to_muxImm;
 	wire [7:0] fsm_to_ALU;
 	
-	wire [15:0] r0_to_mux, r1_to_mux, r2_to_mux,  r3_to_mux,  r4_to_mux,  r5_to_mux,  r6_to_mux,  r7_to_mux,
-	            r8_to_mux, r9_to_mux, r10_to_mux, r11_to_mux, r12_to_mux, r13_to_mux, r14_to_mux, r15_to_mux;
-					// ^Is there a cleaner way to do this?
-					
-	wire [15:0] muxA_to_aluA, muxB_to_muxImm, muxImm_to_aluB, bus;
-	wire [4:0] ALU_to_flagsReg;
-	
+	wire [15:0] r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
 	
 	fsm fib_fsm (
 		.clk (clk),
@@ -36,121 +30,54 @@ module lab02 (
 		.Opcode (fsm_to_ALU)
 	);
 	
-	
-	regfile regArr (
-		.clk (clk),
-		.reset (rst),
-		.regEnable (fsm_to_regfile),
-		.ALUBus (bus),
-		.r0 (r0_to_mux),
-		.r1 (r1_to_mux),
-		.r2 (r2_to_mux),
-		.r3 (r3_to_mux),
-		.r4 (r4_to_mux),
-		.r5 (r5_to_mux),
-		.r6 (r6_to_mux),
-		.r7 (r7_to_mux),
-		.r8 (r8_to_mux),
-		.r9 (r9_to_mux),
-		.r10(r10_to_mux),
-		.r11(r11_to_mux),
-		.r12(r12_to_mux),
-		.r13(r13_to_mux),
-		.r14(r14_to_mux),
-		.r15(r15_to_mux)
+	regFileInitializer regFileAlu(
+		.clk(clk),
+		.regEnable(fsm_to_regfile),
+		.reset(rst),
+		.a_select(fsm_to_muxA),
+		.b_select(fsm_to_muxB),
+		.use_imm(fsm_to_muxImm),
+		.immediate(imm16),
+		.opCode(fsm_to_ALU),
+		.r0(r0),
+		.r1(r1),
+		.r2(r2),
+		.r3(r3),
+		.r4(r4),
+		.r5(r5),
+		.r6(r6),
+		.r7(r7),
+		.r8(r8),
+		.r9(r9),
+		.r10(r10),
+		.r11(r11),
+		.r12(r12),
+		.r13(r13),
+		.r14(r14),
+		.r15(r15),
+		.flags(flagLEDs)
 	);
-	
-	
-	mux muxA (
-		.select (fsm_to_muxA),
-		.r0 (r0_to_mux),
-		.r1 (r1_to_mux),
-		.r2 (r2_to_mux),
-		.r3 (r3_to_mux),
-		.r4 (r4_to_mux),
-		.r5 (r5_to_mux),
-		.r6 (r6_to_mux),
-		.r7 (r7_to_mux),
-		.r8 (r8_to_mux),
-		.r9 (r9_to_mux),
-		.r10(r10_to_mux),
-		.r11(r11_to_mux),
-		.r12(r12_to_mux),
-		.r13(r13_to_mux),
-		.r14(r14_to_mux),
-		.r15(r15_to_mux),
-		.out (muxA_to_aluA)
-	);
-	
-	
-	mux muxB (
-		.select (fsm_to_muxB),
-		.r0 (r0_to_mux),
-		.r1 (r1_to_mux),
-		.r2 (r2_to_mux),
-		.r3 (r3_to_mux),
-		.r4 (r4_to_mux),
-		.r5 (r5_to_mux),
-		.r6 (r6_to_mux),
-		.r7 (r7_to_mux),
-		.r8 (r8_to_mux),
-		.r9 (r9_to_mux),
-		.r10(r10_to_mux),
-		.r11(r11_to_mux),
-		.r12(r12_to_mux),
-		.r13(r13_to_mux),
-		.r14(r14_to_mux),
-		.r15(r15_to_mux),
-		.out (muxB_to_muxImm)
-	);
-	
-	
-	inputMux muxImm (
-		.select (fsm_to_muxImm),
-		.b (muxB_to_muxImm),
-		.immd (imm16),
-		.out (muxImm_to_aluB)
-	);
-	
-	
-	alu ALU (
-		.A (muxA_to_aluA),
-		.B (muxImm_to_aluB),
-		.carryIn (), // Not using carryIn for now.
-		.Opcode (fsm_to_ALU),
-		.C (bus),
-		.Flags (ALU_to_flagsReg)
-	);
-	
-	
-	flagsReg FlagReg(
-		.clk (clk),
-		.reset (rst),
-		.D (ALU_to_flagsReg),
-		.r (flagLEDs)
-	);
-	
 	
 	hexTo7Seg hex0(
-		.x (r15_to_mux[3:0]),
+		.x (r15[3:0]),
 		.z (dsp_7seg_0)
 	);
 	
 	
 	hexTo7Seg hex1(
-		.x (r15_to_mux[7:4]),
+		.x (r15[7:4]),
 		.z (dsp_7seg_1)
 	);
 	
 	
 	hexTo7Seg hex2(
-		.x (r15_to_mux[11:8]),
+		.x (r15[11:8]),
 		.z (dsp_7seg_2)
 	);
 	
 	
 	hexTo7Seg hex3(
-		.x (r15_to_mux[15:12]),
+		.x (r15[15:12]),
 		.z (dsp_7seg_3)
 	);
 	

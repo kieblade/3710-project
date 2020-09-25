@@ -9,7 +9,7 @@ module tb_regfile();
 	reg [15:0] bus, regEnable;
 	reg clk, reset;
 	
-	integer unsigned i, temp;
+	integer i, temp;
 	
 	regfile uut(
 		.clk(clk),
