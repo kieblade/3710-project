@@ -157,7 +157,7 @@ begin
 		end
 	ALSH, ALSHI:
 		begin
-		C = A<<<B;
+		C = $signed(A)<<<B;
 		Flags[4:0] = 5'b00000;
 		end
 	LSH, LSHI:
