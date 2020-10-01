@@ -12,9 +12,7 @@ module tb_dpram();
 	integer i, j;
 	
 	parameter verbose = 0;
-	
-	reg [15:0] ram [1023:0];
-	
+		
 	dpram uut(
 		.clk(clk),
 		.en_A(en_A),
@@ -24,8 +22,7 @@ module tb_dpram();
 		.data_A(data_A),
 		.data_B(data_B),
 		.out_A(out_A),
-		.out_B(out_B),
-		.ram(ram)
+		.out_B(out_B)
 	);
 	
 	initial begin
