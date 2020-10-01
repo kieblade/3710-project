@@ -5,11 +5,9 @@ module dpram (
 	input  [9:0] addr_A, addr_B,
 	input [15:0] data_A, data_B,
 	output reg [15:0] out_A, out_B
-);
-	
-	
 	// RAM variable is a 2D array of 1024 16-bit words.
-	reg [15:0] ram [1023:0];
+	input reg [15:0] ram [1023:0];
+);
 	
 	// Port A
 	always @(posedge clk) begin
