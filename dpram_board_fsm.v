@@ -37,7 +37,7 @@ module dpram_board_fsm(clk, reset, button_code, dout_a, dout_b, addr_a, addr_b, 
 	always @(cs) begin
 		case (outer_state):
 			SIDLE:
-				
+				ns = S0;
 			S1:
 				// iterate and add, single port
 				// sequence of read and write back
@@ -241,7 +241,46 @@ module dpram_board_fsm(clk, reset, button_code, dout_a, dout_b, addr_a, addr_b, 
 					done = 1'b1;
 					ns = IS0;
 				endcase
+			// fibonnacci on the first three addresses dual port
 			S2:
+				case (cs)
+				ISO:
+					addr_a = 10'd0;
+					addr_b = 10'd1;
+					din_a = 16'dx;
+					din_b = 16'dx;
+					wen_a = 1'b0;
+					wen_b = 1'b0;
+					done = 1'b0;
+					ns = IS1;
+				IS1:
+					addr_a = 10'd2;
+					addr_b = 10'dx;
+					din_a = dout_a + dout_b;
+					din_b = 16'dx;
+					wen_a = 1'b1;
+					wen_b = 1'b0;
+					done = 1'b0;
+					ns = IS2;
+				IS2:
+					addr_a = 10'd1;
+					addr_b = 10'd2;
+					din_a = 16'dx;
+					din_b = 16'dx;
+					wen_a = 1'b0;
+					wen_b = 1'b0;
+					done = 1'b0;
+					ns = IS3;
+				IS3:
+					addr_a = 10'd0;
+					addr_b = 10'd1;
+					din_a = dout_a;
+					din_b = dout_b;
+					wen_a = 1'b1;
+					wen_b = 1'b1;
+					done = 1'b1;
+					ns = IS0;
+				endcase
 			S3:
 			S4:
 			default:
