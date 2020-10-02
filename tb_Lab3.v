@@ -11,7 +11,7 @@ module tb_Lab3();
 	
 	integer i;
 	
-	parameter verbose = 0;
+	parameter verbose = 1;
 	parameter [5:0] SIDLE = 6'b111111;
 	
 	
@@ -44,22 +44,22 @@ module tb_Lab3();
 		#500
 
 		for (i = 0; i < 5; i = i + 1) begin
+			display_addr = i;
 			if (verbose) $display("display address: %d", display_addr);
-			display_addr = i+1;
 			#10
-			if (verbose) $display("output: %d", uut.readonly_out);
-			if (uut.readonly_out != i) $display("Error! Expected %d, got %d. In simple read", i, uut.readonly_out);
+			if (verbose) $display("output: %d", uut.dout_a);
+			if (uut.dout_a != i) $display("Error! Expected %d, got %d. In simple read", i, uut.dout_a);
 		end
 		
 		display_addr = 10'd504;
 		#10
 		
 		for (i = 504; i < 510; i = i + 1) begin
+			display_addr = i;
 			if (verbose) $display("display address: %d", display_addr);
-			display_addr = i+1;
 			#10
-			if (verbose) $display("output: %d", uut.readonly_out);
-			if (uut.readonly_out != i) $display("Error! Expected %d, got %d. In simple read", i, uut.readonly_out);
+			if (verbose) $display("output: %d", uut.dout_a);
+			if (uut.dout_a != i) $display("Error! Expected %d, got %d. In simple read", i, uut.dout_a);
 		end
 		
 		display_addr = 10'd0;
@@ -78,22 +78,22 @@ module tb_Lab3();
 		#500
 		
 		for (i = 0; i < 5; i = i + 1) begin
+			display_addr = i;
 			if (verbose) $display("display address: %d", display_addr);
-			display_addr = i+1;
 			#10
-			if (verbose) $display("output: %d", uut.readonly_out);
-			if (uut.readonly_out != i+1) $display("Error! Expected %d, got %d. In simple read", i+1, uut.readonly_out);
+			if (verbose) $display("output: %d", uut.dout_a);
+			if (uut.dout_a != i+1) $display("Error! Expected %d, got %d. In simple read", i+1, uut.dout_a);
 		end
 		
 		display_addr = 10'd504;
 		#10
 		
 		for (i = 504; i < 511; i = i + 1) begin
+			display_addr = i;
 			if (verbose) $display("display address: %d", display_addr);
-			display_addr = i+1;
 			#10
-			if (verbose) $display("output: %d", uut.readonly_out);
-			if (uut.readonly_out != i+1) $display("Error! Expected %d, got %d. In simple read", i+1, uut.readonly_out);
+			if (verbose) $display("output: %d", uut.dout_a);
+			if (uut.dout_a != i+1) $display("Error! Expected %d, got %d. In simple read", i+1, uut.dout_a);
 		end
 		
 		display_addr = 10'd0;
@@ -111,23 +111,23 @@ module tb_Lab3();
 		button_code = 3'b111;
 		#500
 		
+		display_addr = 0;
 		if (verbose) $display("display address: %d", display_addr);
+		#10
+		if (verbose) $display("output: %d", uut.dout_a);
+		if (uut.dout_a != 16'd2) $display("Error! Expected %d, got %d. In simple read", 16'd2, uut.dout_a);
+		
 		display_addr = 1;
-		#10
-		if (verbose) $display("output: %d", uut.readonly_out);
-		if (uut.readonly_out != 16'd2) $display("Error! Expected %d, got %d. In simple read", 16'd2, uut.readonly_out);
-		
 		if (verbose) $display("display address: %d", display_addr);
+		#10
+		if (verbose) $display("output: %d", uut.dout_a);
+		if (uut.dout_a != 16'd3) $display("Error! Expected %d, got %d. In simple read", 16'd3, uut.dout_a);
+		
 		display_addr = 2;
-		#10
-		if (verbose) $display("output: %d", uut.readonly_out);
-		if (uut.readonly_out != 16'd3) $display("Error! Expected %d, got %d. In simple read", 16'd3, uut.readonly_out);
-		
 		if (verbose) $display("display address: %d", display_addr);
-		display_addr = 3;
 		#10
-		if (verbose) $display("output: %d", uut.readonly_out);
-		if (uut.readonly_out != 16'd3) $display("Error! Expected %d, got %d. In simple read", 16'd3, uut.readonly_out);
+		if (verbose) $display("output: %d", uut.dout_a);
+		if (uut.dout_a != 16'd3) $display("Error! Expected %d, got %d. In simple read", 16'd3, uut.dout_a);
 		
 		$display("Testbench ends!");
 	end
