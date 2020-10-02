@@ -30,6 +30,4 @@ module dpram (
 			out_B <= ram[addr_B];
 		end
 	end
-	
-	
 endmodule
