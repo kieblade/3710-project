@@ -48,9 +48,7 @@ module tb_dpram();
 				en_B = 1;
 				if (verbose) $display("Writing %d into mem%d and %d into mem%d", data_A, addr_A, data_B, addr_B);
 				
-				clk = 1;
-				#10
-				clk = 0;
+				#20
 				en_A = 0;
 				en_B = 0;
 				#10
