@@ -55,15 +55,14 @@ parameter XORI  = 8'b00110000;
 parameter NOT   = 8'b00001111;
 
 // shifts
-parameter LSH   = 8'b10000100;
-parameter LSHI  = 8'b10000000;
-parameter RSH   = 8'b10000101;
-parameter RSHI  = 8'b10000001;
-
-parameter ALSH  = 8'b10000110;
-parameter ALSHI = 8'b10000010;
-parameter ARSH  = 8'b10000111;
-parameter ARSHI = 8'b10000011;
+parameter LSH   = 8'b 1000_0100;
+parameter LSHI  = 8'b 1000_000x;
+parameter RSH   = 8'b 1000_0101;
+parameter RSHI  = 8'b 1000_001x;
+parameter ALSH  = 8'b 1000_0110;
+parameter ALSHI = 8'b 1000_100x;
+parameter ARSH  = 8'b 1000_0111;
+parameter ARSHI = 8'b 1000_101x;
 
 parameter NOP   = 8'b00000000;
 
