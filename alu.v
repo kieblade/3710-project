@@ -30,31 +30,31 @@ output reg [4:0] Flags;
 //Flags[2] flag bit (overflow)
 //Flags[3] carry bit
 //Flags[4] z bit
-parameter ADD   = 8'b00000101;
-parameter ADDI  = 8'b01010000;
-parameter ADDU  = 8'b00000110;
-parameter ADDUI = 8'b01100000;
-parameter ADDC  = 8'b00000111;
-parameter ADDCI = 8'b01110000;
-parameter ADDCU = 8'b00000100;
-parameter ADDCUI= 8'b10100000;
-parameter SUB   = 8'b00001001;
-parameter SUBI  = 8'b10010000;
-parameter CMP   = 8'b00001011;
-parameter CMPI  = 8'b10110000;
-parameter CMPU  = 8'b00001000; 
-parameter CMPUI = 8'b11000000;
 
-parameter AND   = 8'b00000001;
-parameter ANDI  = 8'b00010000;
-
-parameter OR    = 8'b00000010;
-parameter ORI   = 8'b00100000;
-parameter XOR   = 8'b00000011;
-parameter XORI  = 8'b00110000;
-parameter NOT   = 8'b00001111;
-
-// shifts
+// Opcode List
+parameter ADD   = 8'b 0000_0101;
+parameter ADDI  = 8'b 0101_xxxx;
+parameter ADDU  = 8'b 0000_0110;
+parameter ADDUI = 8'b 0110_xxxx;
+parameter ADDC  = 8'b 0000_0111;
+parameter ADDCI = 8'b 0111_xxxx;
+parameter ADDCU = 8'b 0000_0100;
+parameter ADDCUI= 8'b 1010_xxxx;
+parameter SUB   = 8'b 0000_1001;
+parameter SUBI  = 8'b 1001_xxxx;
+parameter CMP   = 8'b 0000_1011;
+parameter CMPI  = 8'b 1011_xxxx;
+parameter CMPU  = 8'b 0000_1000; 
+parameter CMPUI = 8'b 1100_xxxx;
+	
+parameter AND   = 8'b 0000_0001;
+parameter ANDI  = 8'b 0001_xxxx;
+parameter OR    = 8'b 0000_0010;
+parameter ORI   = 8'b 0010_xxxx;
+parameter XOR   = 8'b 0000_0011;
+parameter XORI  = 8'b 0011_xxxx;
+parameter NOT   = 8'b 0000_1111;	
+	
 parameter LSH   = 8'b 1000_0100;
 parameter LSHI  = 8'b 1000_000x;
 parameter RSH   = 8'b 1000_0101;
@@ -63,12 +63,15 @@ parameter ALSH  = 8'b 1000_0110;
 parameter ALSHI = 8'b 1000_100x;
 parameter ARSH  = 8'b 1000_0111;
 parameter ARSHI = 8'b 1000_101x;
-
-parameter NOP   = 8'b00000000;
+	
+parameter LOAD  = 8'b 0100_0000;
+parameter STOR  = 8'b 0100_0100;
+	
+parameter NOP   = 8'b 0000_0000;
 
 always @(A, B, carryIn, Opcode)
 begin
-	case (Opcode)
+	casex (Opcode)
 	ADDU, ADDUI:
 		begin
 		{Flags[3], C} = A + B;
