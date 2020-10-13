@@ -1,0 +1,13 @@
+5101 // load 1 into reg1
+5202 // load 2 into reg2
+0152 // reg1 = reg1 + reg2 or 3
+0192 // reg1 = reg1 - reg2 or 1
+01B2 // (reg1 == reg2) reg1 = 0
+5155 // load 55 into reg1
+52AA // load AA into reg2
+0112 // reg1 = reg1 & reg2 or 0
+5155 // load 55 into reg1
+0122 // reg1 = reg1 | reg2 or FF
+0132 // reg1 = reg1 ^ reg2 or 55
+@3FF
+0000
