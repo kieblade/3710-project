@@ -23,7 +23,7 @@ module CPU (
 	pc_incr increment(
 		.curr_pc(addr_A), 			// current address
 		.diff(1'b1),					// amount to change address
-		.decr(0'b1),					// decrease address number
+		.decr(0),					// decrease address number
 		.next_pc(next_pc)				// next address
 	);
 	
