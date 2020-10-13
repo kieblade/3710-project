@@ -3,7 +3,7 @@ module program_counter(addr_in, addr_out, en);
 	input en;
 	output reg [15:0] addr_out;
 	
-	always @(en, addr_in)
+	always @(posedge en)
 	begin
 		if (en == 1'b1)
 			addr_out = addr_in;
