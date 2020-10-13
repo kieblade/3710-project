@@ -5,8 +5,8 @@ module dpram (
 	input [15:0] addr_A, addr_B, data_A, data_B,
 	output reg [15:0] out_A, out_B
 );
-	// RAM variable is a 2D array of 1024 16-bit words.
-	reg [15:0] ram [1023:0];
+	// RAM variable is a 2D array of 65,536 16-bit words.
+	reg [15:0] ram [65535:0];
 	
 	initial
 	begin

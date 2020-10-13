@@ -15,7 +15,7 @@ module CPU (
 	wire [3:0] en_reg, s_muxA, s_muxB;
 	wire PCe, s_muxImm, en_A, en_B, en_MAR, en_MDR;
 	
-	fsm FSM(
+	CPU_FSM FSM(
 		.clk(clk),						// clock
 		.PCe(PCe)						// program counter enable
 	);
