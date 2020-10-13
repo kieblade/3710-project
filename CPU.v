@@ -59,6 +59,11 @@ module CPU (
 		.en_MDR(en_MDR)          	// Memory data register enable
 	);
 	
+	rdest_decoder reg_decoder(
+		.reg_en(en_reg),
+		.regEnable(regEnable)
+	);
+	
 	
 	regFileInitializer alu(
 		.regEnable(regEnable),		// Which reg to enable
