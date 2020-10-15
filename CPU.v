@@ -9,33 +9,43 @@ module CPU (
 	
 );
 
-	wire [15:0] addr_A, addr_B, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
+	wire [15:0] addr_A, addr_B, address, mux_b_out, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
 	wire [7:0] opcode;
 //	wire [4:0] flags;
 	wire [3:0] en_reg, s_muxA, s_muxB;
-	wire PCe, s_muxImm, en_A, en_B, en_MAR, en_MDR;
+	wire PCe, Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR;
 	
 	CPU_FSM FSM(
+		.opcode(opcode),				// instruction
 		.clk(clk),						// clock
-		.PCe(PCe)						// program counter enable
+		.PCe(PCe),						// program counter enable
+		.Lscntl(Lscntl),				// address mux select
+		.WE(WE)							// Write enable
 	);
 	
 	pc_incr increment(
 		.curr_pc(addr_A), 			// current address
 		.diff(1'b1),					// amount to change address
-		.decr(0),					// decrease address number
+		.decr(0),						// decrease address number
 		.next_pc(next_pc)				// next address
 	);
 	
 	program_counter PC(
 		.addr_in(next_PC),			// next address
 		.en(PCe),						// program counter enable
-		.addr_out(addr_A)				// address out
+		.addr_out(address)			// address out
+	);
+	
+	inputMux addressMux(
+		.select(Lscntl), 				// address mux select
+		.b(mux_b_out),					// address from program counter
+		.immd(address), 			// address from register
+		.out(addr_A)					// adress to ram
 	);
 	
 	dpram RAM(
 		.clk(clk),						// clock
-		.en_A(en_A),					// port A enable
+		.en_A(WE),					// port A enable
 		.en_B(en_B),					// port B enable
 		.addr_A(addr_A),				// port A address
 		.addr_B(addr_B),				// port B address
@@ -60,8 +70,8 @@ module CPU (
 	);
 	
 	rdest_decoder reg_decoder(
-		.reg_en(en_reg),
-		.regEnable(regEnable)
+		.reg_en(en_reg),				// reg enable from instruction
+		.regEnable(regEnable)		// reg enable for regFile
 	);
 	
 	
@@ -75,6 +85,7 @@ module CPU (
 		.immediate(imm), 				// immediate
 		.opCode(opCode),				// opCode
 		.r1(r1),							// register 1
+		.mux_b_out(mux_b_out),		// output from mux b
 		.flags(flagLEDs)				// flags
 	);
 	
