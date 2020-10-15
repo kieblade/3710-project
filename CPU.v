@@ -9,11 +9,11 @@ module CPU (
 	
 );
 
-	wire [15:0] addr_A, addr_B, address, mux_b_out, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
+	wire [15:0] addr_A, addr_B, next_pc, address, mux_b_out, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
 	wire [7:0] opcode;
 //	wire [4:0] flags;
 	wire [3:0] en_reg, s_muxA, s_muxB;
-	wire PCe, Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR;
+	wire PCe, Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE;
 	
 	CPU_FSM FSM(
 		.opcode(opcode),				// instruction
@@ -31,7 +31,7 @@ module CPU (
 	);
 	
 	program_counter PC(
-		.addr_in(next_PC),			// next address
+		.addr_in(next_pc),			// next address
 		.en(PCe),						// program counter enable
 		.addr_out(address)			// address out
 	);
@@ -83,7 +83,7 @@ module CPU (
 		.b_select(s_muxB), 			// mux select for mux B
 		.use_imm(s_muxImm), 			// mux select for immediate mux
 		.immediate(imm), 				// immediate
-		.opCode(opCode),				// opCode
+		.opCode(opcode),				// opCode
 		.r1(r1),							// register 1
 		.mux_b_out(mux_b_out),		// output from mux b
 		.flags(flagLEDs)				// flags
