@@ -121,7 +121,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0000 ' + secondRegNum + ' ' + instrCode(instr) + ' ' + firstRegNum;
+                        data = '0000' + secondRegNum + instrCode(instr) + firstRegNum;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: R-type needs two registers')
@@ -134,7 +134,7 @@ class myClass():
                     if ((Immd[0] in '$') and (secondReg in registers)):
                         immediate = '{0:08b}'.format(int(Immd.replace('$', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = instrCode(instr) + ' ' + secondRegNum + ' ' + immediate[:4] + ' ' + immediate[4:8];
+                        data = instrCode(instr) + secondRegNum + immediate;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate operations need an immd then a register')
@@ -147,7 +147,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '1000 ' + secondRegNum + ' ' + instrCode(instr) + ' ' + firstRegNum;
+                        data = '1000' + secondRegNum + instrCode(instr) + firstRegNum;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: shifts needs two registers')
@@ -160,7 +160,7 @@ class myClass():
                     if ((Immd[0] in '$') and (secondReg in registers)):
                         immediate = '{0:08b}'.format(int(Immd.replace('$', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '1000 ' + secondRegNum + ' ' + instrCode(instr) + ' ' + immediate[4:8];
+                        data = '1000' + secondRegNum + instrCode(instr) + immediate[4:8];
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate shifts need an immd then a register')
@@ -171,7 +171,7 @@ class myClass():
                     firstReg = parts.pop(0)
                     if ((firstReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
-                        data = '0000 ' + firstRegNum + ' 1111 xxxx';
+                        data = '0000' + firstRegNum + '11110000';
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: NOT operation needs one register')
@@ -184,7 +184,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0100 ' + firstRegNum + ' 0000 ' + secondRegNum;
+                        data = '0100' + firstRegNum + '0000' + secondRegNum;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: load needs two registers')
@@ -197,7 +197,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0100 ' + firstRegNum + ' 0100 ' + secondRegNum;
+                        data = '0100' + firstRegNum + '0100' + secondRegNum;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: store needs two registers')
@@ -205,7 +205,7 @@ class myClass():
                    sys.exit('Syntax Error: store needs two args')
             elif (instr == 'NOP'):
                if (len(parts) == 0):
-                    data = '0000 0000 0000 0000';
+                    data = '0000000000000000';
                     wf.write(data + '\n')
                else:
                    sys.exit('Syntax Error: load needs two args')
