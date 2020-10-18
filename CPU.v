@@ -5,19 +5,20 @@ module CPU (
 	output [6:0] dsp_7seg_1,		// second hex value
 	output [6:0] dsp_7seg_2,		// third hex value
 	output [6:0] dsp_7seg_3,		// fourth hex value
-	output [4:0] flagLEDs			// flags
+	output [4:0] flagLEDs,			// flags
+	output PCe
 	
 );
 
-	wire [15:0] addr_A, addr_B, next_pc, address, mux_b_out, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
+	wire [15:0] addr_A, addr_B, next_pc, address, mux_a_out, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
 	wire [7:0] opcode;
 //	wire [4:0] flags;
 	wire [3:0] en_reg, s_muxA, s_muxB;
-	wire PCe, Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE;
+	wire Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE;
 	
 	CPU_FSM FSM(
 		.opcode(opcode),				// instruction
-		.clk(clk),						// clock
+		.clk(~clk),						// clock
 		.PCe(PCe),						// program counter enable
 		.Lscntl(Lscntl),				// address mux select
 		.WE(WE)							// Write enable
@@ -38,14 +39,14 @@ module CPU (
 	
 	inputMux addressMux(
 		.select(Lscntl), 				// address mux select
-		.b(mux_b_out),					// address from program counter
-		.immd(address), 			// address from register
+		.b(mux_a_out),					// address from program counter
+		.immd(address), 				// address from register
 		.out(addr_A)					// adress to ram
 	);
 	
 	dpram RAM(
-		.clk(clk),						// clock
-		.en_A(WE),					// port A enable
+		.clk(~clk),						// clock
+		.en_A(WE),						// port A enable
 		.en_B(en_B),					// port B enable
 		.addr_A(addr_A),				// port A address
 		.addr_B(addr_B),				// port B address
@@ -56,7 +57,7 @@ module CPU (
 	);
 
 	decoder instrDecoder (
-		.instr(instr), 	       	// Instruction
+		.instr(out_A), 	       	// Instruction
 		.opcode(opcode),      	 	// Opcode for ALU
 		.en_reg(en_reg),  		 	// Regfile enables (Rdest)
 		.s_muxA(s_muxA), 			 	// MUX A Select
@@ -77,7 +78,7 @@ module CPU (
 	
 	regFileInitializer alu(
 		.regEnable(regEnable),		// Which reg to enable
-		.clk(clk), 						// clock
+		.clk(~clk),		 				// clock
 		.reset(reset), 				// reset
 		.a_select(s_muxA), 			// mux select for mux A
 		.b_select(s_muxB), 			// mux select for mux B
@@ -85,30 +86,30 @@ module CPU (
 		.immediate(imm), 				// immediate
 		.opCode(opcode),				// opCode
 		.r1(r1),							// register 1
-		.mux_b_out(mux_b_out),		// output from mux b
+		.mux_a_out(mux_a_out),		// output from mux b
 		.flags(flagLEDs)				// flags
 	);
 	
 	hexTo7Seg hex0(
-		.x (r1[3:0]),
+		.x (regEnable[3:0]),
 		.z (dsp_7seg_0)
 	);
 	
 	
 	hexTo7Seg hex1(
-		.x (r1[7:4]),
+		.x (regEnable[7:4]),
 		.z (dsp_7seg_1)
 	);
 	
 	
 	hexTo7Seg hex2(
-		.x (r1[11:8]),
+		.x (regEnable[11:8]),
 		.z (dsp_7seg_2)
 	);
 	
 	
 	hexTo7Seg hex3(
-		.x (r1[15:12]),
+		.x (regEnable[15:12]),
 		.z (dsp_7seg_3)
 	);
 

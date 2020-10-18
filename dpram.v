@@ -10,7 +10,7 @@ module dpram (
 	
 	initial
 	begin
-		$readmemh("R_instructions.txt", ram);
+		$readmemb("data_file.txt", ram);
 	end
 	
 	// Port A
