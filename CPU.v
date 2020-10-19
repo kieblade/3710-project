@@ -10,11 +10,11 @@ module CPU (
 	
 );
 
-	wire [15:0] addr_A, addr_B, next_pc, address, mux_a_out, instr, data_A, data_B, out_A, out_B, imm, regEnable, r1;
+	wire [15:0] addr_A, addr_B, next_pc, address, mux_a_out, instr, data_A, data_B, out_A, instr_out, out_B, imm, regEnable, r1;
 	wire [7:0] opcode;
 //	wire [4:0] flags;
 	wire [3:0] en_reg, s_muxA, s_muxB;
-	wire Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE;
+	wire Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE, i_en;
 	
 	CPU_FSM FSM(
 		.opcode(opcode),				// instruction
@@ -54,6 +54,12 @@ module CPU (
 		.data_B(data_B),				// data into port B
 		.out_A(out_A),					// data out of port A
 		.out_B(out_B)					// data out of port B
+	);
+	
+	instr_reg instruction_register(
+		.en(i_en),
+		.in(out_A),
+		.out(instr_out)
 	);
 
 	decoder instrDecoder (

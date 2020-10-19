@@ -7,9 +7,8 @@ module regFileInitializer(
 	use_imm, 
 	immediate, 
 	opCode,
-	r1,
 	mux_a_out,
-	/*r0,
+	r0,
 	r1,
 	r2,
 	r3,
@@ -24,7 +23,7 @@ module regFileInitializer(
 	r12,
 	r13,
 	r14,
-	r15,*/
+	r15,
 	flags
 	);
 	
@@ -33,9 +32,9 @@ module regFileInitializer(
 	input [15:0] regEnable, immediate;
 	input [3:0] a_select, b_select;
 	wire [15:0] aluBus, mux_b_out, inputMux_out;
-	wire [15:0] r0, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
 	wire [4:0] flagsIn;
-	output [15:0] r1, mux_a_out;
+	output [15:0] r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
+	output [15:0] mux_a_out;
 	output [4:0] flags;
 	
 	regfile regArray(

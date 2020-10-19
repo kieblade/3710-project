@@ -45,10 +45,10 @@ module tb_regFileInitializer();
 	parameter RSH = 8'b10000101;
 	parameter RSHI = 8'b10000001;
 
-	parameter ALSH = 8'b10000110;
-	parameter ALSHI = 8'b10000010;
-	parameter ARSH = 8'b10000111;
-	parameter ARSHI = 8'b10000011;
+	parameter ALSH = 8'b1000_0110;
+	parameter ALSHI = 8'b1000_1001;
+	parameter ARSH = 8'b1000_0111;
+	parameter ARSHI = 8'b10001011;
 
 	parameter NOP = 8'b00000000;
 		
@@ -385,7 +385,7 @@ module tb_regFileInitializer();
 				#10;
 				
 				if (verbose) $display("Resulted in %d", $signed(valFromReg(i)));
-				if ($signed(valFromReg(i)) != $signed(temp) >>> $signed(temp1)) $display("Error! Expected %d but got %d", temp << temp1, valFromReg(i));
+				if ($signed(valFromReg(i)) != $signed($signed(temp) >>> temp1)) $display("Error! Expected %d but got %d", $signed($signed(temp) >>> temp1), $signed(valFromReg(i)));
 			end
 		end
 		

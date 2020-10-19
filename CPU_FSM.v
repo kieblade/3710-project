@@ -1,10 +1,10 @@
 // FSM for processor and program counter.
 
-module CPU_FSM (opcode, clk, PCe, Lscntl, WE);
+module CPU_FSM (opcode, clk, PCe, Lscntl, WE, i_en);
 
 	input [7:0] opcode;
 	input clk;
-	output reg PCe, Lscntl, WE;
+	output reg PCe, Lscntl, WE, i_en;
 	
 	reg [3:0] state; 
 	parameter [4:0] S0 = 5'd0, S1  = 5'd1,  S2  = 5'd2,  S3  = 5'd3,  S4  = 5'd4,  S5  = 5'd5,  S6  = 5'd6,  S7  = 5'd7, S8 = 5'd8;
@@ -48,28 +48,33 @@ module CPU_FSM (opcode, clk, PCe, Lscntl, WE);
 					PCe = 0;
 					Lscntl = 1;
 					WE = 0;
+					i_en = 1;
 				end
 			S1:                      
 				begin 
 					PCe = 0;
 					Lscntl = 1;
 					WE = 0;
+					i_en = 0;
 				end
 			S2:
 				begin 
 					PCe = 1;
 					Lscntl = 1;
 					WE = 0;
+					i_en = 0;
 				end
 			S3:
 				begin
 					PCe = 1;
 					Lscntl = 0;
 					WE = 1;
+					i_en = 0;
 				end
 			default:
 				begin 
 					PCe = 0;
+					i_en = 0;
 				end
 		endcase
 	
