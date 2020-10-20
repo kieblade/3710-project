@@ -10,18 +10,25 @@ module CPU (
 	
 );
 
-	wire [15:0] addr_A, addr_B, next_pc, address, mux_a_out, instr, data_A, data_B, out_A, instr_out, out_B, imm, regEnable, r1;
+	wire [15:0] mux_a_out, instr, data_A, data_B, out_A, instr_out, out_B, imm, regEnable;
+	wire [15:0] r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
+	wire [9:0] addr_A, addr_B, next_pc, address;
 	wire [7:0] opcode;
 //	wire [4:0] flags;
 	wire [3:0] en_reg, s_muxA, s_muxB;
-	wire Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE, i_en;
+	wire [1:0] type;
+	wire Lscntl, s_muxImm, en_A, en_B, en_MAR, en_MDR, WE, i_en, flagsEn;
 	
 	CPU_FSM FSM(
-		.opcode(opcode),				// instruction
+		.type(type),					// instruction type
 		.clk(~clk),						// clock
 		.PCe(PCe),						// program counter enable
 		.Lscntl(Lscntl),				// address mux select
-		.WE(WE)							// Write enable
+		.WE(WE),							// Write enable
+		.i_en(i_en),					// Enable for instruction register
+		.s_muxImm(s_muxImm),			// select for immediate mux
+		.reg_Wen(reg_Wen),			// write enable for regFile (It's needed just trust me - Seth)
+		.flagsEn(flagsEn)				// write enable for flags register (it overwrites the flags if you don't have this)
 	);
 	
 	pc_incr increment(
@@ -57,9 +64,9 @@ module CPU (
 	);
 	
 	instr_reg instruction_register(
-		.en(i_en),
-		.in(out_A),
-		.out(instr_out)
+		.en(i_en),						// instruction register enable
+		.in(out_A),						// input address
+		.out(instr_out)				// output address
 	);
 
 	decoder instrDecoder (
@@ -68,16 +75,13 @@ module CPU (
 		.en_reg(en_reg),  		 	// Regfile enables (Rdest)
 		.s_muxA(s_muxA), 			 	// MUX A Select
 		.s_muxB(s_muxB), 			 	// MUX B Select
-		.s_muxImm(s_muxImm),     	// MUX Immediate Select
 		.imm(imm), 				    	// Immediate
-		.en_A(en_A),    	       	// BRAM Port A enable
-		.en_B(en_B),      	    	// BRAM Port B enable
-		.en_MAR(en_MAR),         	// Memory address register enable
-		.en_MDR(en_MDR)          	// Memory data register enable
+		.type(type)						// instuction type
 	);
 	
 	rdest_decoder reg_decoder(
 		.reg_en(en_reg),				// reg enable from instruction
+		.reg_Wen(reg_Wen),			// enable to prevent regEnable until ready
 		.regEnable(regEnable)		// reg enable for regFile
 	);
 	
@@ -91,31 +95,47 @@ module CPU (
 		.use_imm(s_muxImm), 			// mux select for immediate mux
 		.immediate(imm), 				// immediate
 		.opCode(opcode),				// opCode
-		.r1(r1),							// register 1
 		.mux_a_out(mux_a_out),		// output from mux b
-		.flags(flagLEDs)				// flags
+		.r0(r0),							// register 1 output
+		.r1(r1),							// register 2 output
+		.r2(r2),							// register 3 output
+		.r3(r3),							// register 4 output
+		.r4(r4),							// register 5 output
+		.r5(r5),							// register 6 output
+		.r6(r6),							// register 7 output
+		.r7(r7),							// register 8 output
+		.r8(r8),							// register 9 output
+		.r9(r9),							// register 10 output
+		.r10(r10),						// register 11 output
+		.r11(r11),						// register 12 output
+		.r12(r12),						// register 13 output
+		.r13(r13),						// register 14 output
+		.r14(r14),						// register 15 output
+		.r15(r15),						// register 16 output
+		.flags(flagLEDs),				// flags
+		.flagsEn(flagsEn)          // write enable for flags register (it overwrites the flags if you don't have this)
 	);
 	
 	hexTo7Seg hex0(
-		.x (regEnable[3:0]),
+		.x (r1[3:0]),
 		.z (dsp_7seg_0)
 	);
 	
 	
 	hexTo7Seg hex1(
-		.x (regEnable[7:4]),
+		.x (r1[7:4]),
 		.z (dsp_7seg_1)
 	);
 	
 	
 	hexTo7Seg hex2(
-		.x (regEnable[11:8]),
+		.x (r1[11:8]),
 		.z (dsp_7seg_2)
 	);
 	
 	
 	hexTo7Seg hex3(
-		.x (regEnable[15:12]),
+		.x (r1[15:12]),
 		.z (dsp_7seg_3)
 	);
 

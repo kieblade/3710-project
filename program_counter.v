@@ -1,7 +1,7 @@
 module program_counter(addr_in, addr_out, en);
-	input [15:0] addr_in;
+	input [9:0] addr_in;
 	input en;
-	output reg [15:0] addr_out;
+	output reg [9:0] addr_out;
 	
 	always @(posedge en)
 	begin
