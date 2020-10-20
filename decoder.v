@@ -6,14 +6,8 @@ module decoder (
 	output reg [3:0] en_reg,   // Regfile enables (Rdest)
 	output reg [3:0] s_muxA,   // MUX A Select
 	output reg [3:0] s_muxB,   // MUX B Select
-	output reg s_muxImm,       // MUX Immediate Select
 	output reg [15:0] imm,     // Immediate
-	output reg en_A,           // BRAM Port A enable
-	output reg en_B,           // BRAM Port B enable
-	output reg en_MAR,         // Memory address register enable
-	output reg en_MDR,         // Memory data register enable
-	output reg en_IR,          // Instruction register enable
-	output reg en_PC				// Program counter enable
+	output reg [1:0] type		// Instruction type
 );
 	
 	// Opcode list
@@ -51,8 +45,17 @@ module decoder (
 	
 	parameter LOAD  = 8'b 0100_0000;
 	parameter STOR  = 8'b 0100_0100;
+	parameter JALR  = 8'b 0100_1000;
+	parameter Jcond = 8'b 0100_1100;
+	//parameter Bcond = 8'b ????
 	
 	parameter NOP   = 8'b 0000_0000;
+	
+	// Instruction types       // Examples:
+	parameter rType = 2'b 00;  // ADD  r1, r2 (r1 = r1 + r2)
+	parameter iType = 2'b 01;  // ADDI r1, 16 (r0 = r1 + 16)
+	parameter pType = 2'b 10;  // LOAD r1, r0 (r1 = mem[r0])
+	parameter jType = 2'b 11;  // JALR r0, r1 (r0 = PC + 1; PC = r1)
 	
 	// Concatenate opcode and opcode extension
 	assign opcode[7:4] = instr[15:12];
@@ -62,17 +65,15 @@ module decoder (
 	always @(instr) begin
 		// TODO: add description
 		casex(opcode)
-			// 8-bit immediate operations
+			// 8-bit immediate operations (I-type)
 			ADDI, ADDUI, ADDCI, ADDCUI, SUBI,
 			CMPI, CMPUI, ANDI, ORI, XORI:
 			begin
 				en_reg = instr[11:8];
 				s_muxA = instr[11:8];
 				s_muxB = 4'bx;
-				s_muxImm = 1;
 				imm = $signed(instr[7:0]);
-				en_MAR = 0;
-				en_MDR = 0;
+				type = iType;
 			end
 			// 5-bit immediate operations
 			LSHI, RSHI, ALSHI, ARSHI:
@@ -80,10 +81,8 @@ module decoder (
 				en_reg = instr[11:8];
 				s_muxA = instr[11:8];
 				s_muxB = 4'bx;
-				s_muxImm = 1;
 				imm = $signed(instr[4:0]);
-				en_MAR = 0;
-				en_MDR = 0;
+				type = iType;
 			end
 			// R-type operations
 			ADD, ADDU, ADDC, ADDCU, SUB, CMP, CMPU, AND,
@@ -92,26 +91,38 @@ module decoder (
 				en_reg = instr[11:8];
 				s_muxA = instr[11:8];
 				s_muxB = instr[3:0];
-				s_muxImm = 0;
 				imm = 16'bx;
-				en_MAR = 0;
-				en_MDR = 0;
+				type = rType;
 			end
-			// Load, store, & invalid operations
-			// TODO: LOAD & STOR need their own cases (which might require some small FSMs?)
+			// Load, store, & pointer-type operations
+			LOAD, STOR:
+			begin
+				en_reg = instr[11:8];
+				s_muxA = 4'bx;
+				s_muxB = instr[3:0];
+				imm = 16'bx;
+				type = pType;
+			end
+			// Jump/branch operations
+			JALR, Jcond:
+			begin
+				// TODO: Update to handle conditionals
+				en_reg = instr[11:8];
+				s_muxA = 4'bx;
+				s_muxB = instr[3:0];
+				imm = 16'bx;
+				type = jType;
+			end
+			// Invalid operations
 			default:
 			begin
 				en_reg = 4'b0;
 				s_muxA = 4'bx;
 				s_muxB = 4'bx;
-				s_muxImm = 1'bx;
 				imm = 16'bx;
-				en_MAR = 0;
-				en_MDR = 0;
+				type = 2'bx;
 			end
 		endcase
 	end
-	
-	// TODO: Memory integration (en_A, en_B) and PC & IR.
 	
 endmodule
