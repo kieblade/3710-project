@@ -59,7 +59,7 @@ module tb_cpu();
 		if (verbose) $display("loading fibonacci.b");
 		$readmemb("../../mem_files/fibonacci.b", ram);
 		cycle_reset();
-		#450;
+		#460;
 		
 		if (r1 != 233) $display("Error executing Fibonacci! Expected 233, but got %d\n", r1);
 		if (verbose) $display("Fibonacci resulted in: %d\n", r1);

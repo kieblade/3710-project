@@ -76,7 +76,10 @@ module decoder (
 				imm = $signed(instr[7:0]);
 				type = iType;
 				// don't writeback on cmp instructions
-				wb = opcode != CMPI && opcode != CMPUI;
+				if (opcode == CMPI || opcode == CMPUI)
+					wb = 1'b0;
+				else
+					wb = 1'b1;
 			end
 			// 5-bit immediate operations
 			LSHI, RSHI, ALSHI, ARSHI:
@@ -98,7 +101,10 @@ module decoder (
 				imm = 16'bx;
 				type = rType;
 				// no writeback on cmp and nops
-				wb = opcode != CMP && opcode != CMPU && opcode != NOP;
+				if (opcode == CMP || opcode == CMPU || opcode == NOP)
+					wb = 1'b0;
+				else
+					wb = 1'b1;
 			end
 			// Load, store, & pointer-type operations
 			LOAD, STOR:
@@ -109,7 +115,10 @@ module decoder (
 				imm = 16'bx;
 				type = pType;
 				// may need to be corrected but only writeback on loads.
-				wb = opcode == LOAD;
+				if (opcode == LOAD)
+					wb = 1'b0;
+				else
+					wb = 1'b1;
 			end
 			// Jump/branch operations
 			JALR, Jcond:
