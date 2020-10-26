@@ -1,0 +1,16 @@
+ANDI $0 %r0 
+ANDI $0 %r1
+ANDI $0 %r2 
+ANDI $0 %r3 
+ANDI $0 %r4 
+ANDI $0 %r5 
+ANDI $0 %r6 
+ANDI $0 %r7 
+ANDI $0 %r8 
+ANDI $0 %r9 
+ANDI $0 %r10
+ANDI $0 %r11
+ANDI $0 %r12
+ANDI $0 %r13
+ANDI $0 %r14
+ANDI $0 %r15

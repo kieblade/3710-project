@@ -7,7 +7,8 @@ module decoder (
 	output reg [3:0] s_muxA,   // MUX A Select
 	output reg [3:0] s_muxB,   // MUX B Select
 	output reg [15:0] imm,     // Immediate
-	output reg [1:0] type		// Instruction type
+	output reg [1:0] type,		// Instruction type
+	output reg wb
 );
 	
 	// Opcode list
@@ -74,6 +75,8 @@ module decoder (
 				s_muxB = 4'bx;
 				imm = $signed(instr[7:0]);
 				type = iType;
+				// don't writeback on cmp instructions
+				wb = opcode != CMPI && opcode != CMPUI;
 			end
 			// 5-bit immediate operations
 			LSHI, RSHI, ALSHI, ARSHI:
@@ -83,6 +86,7 @@ module decoder (
 				s_muxB = 4'bx;
 				imm = $signed(instr[4:0]);
 				type = iType;
+				wb = 1'b1;
 			end
 			// R-type operations
 			ADD, ADDU, ADDC, ADDCU, SUB, CMP, CMPU, AND,
@@ -93,6 +97,8 @@ module decoder (
 				s_muxB = instr[3:0];
 				imm = 16'bx;
 				type = rType;
+				// no writeback on cmp and nops
+				wb = opcode != CMP && opcode != CMPU && opcode != NOP;
 			end
 			// Load, store, & pointer-type operations
 			LOAD, STOR:
@@ -102,6 +108,8 @@ module decoder (
 				s_muxB = instr[3:0];
 				imm = 16'bx;
 				type = pType;
+				// may need to be corrected but only writeback on loads.
+				wb = opcode == LOAD;
 			end
 			// Jump/branch operations
 			JALR, Jcond:
@@ -112,6 +120,8 @@ module decoder (
 				s_muxB = instr[3:0];
 				imm = 16'bx;
 				type = jType;
+				// no writeback
+				wb = 1'b0;
 			end
 			// Invalid operations
 			default:
@@ -121,6 +131,7 @@ module decoder (
 				s_muxB = 4'bx;
 				imm = 16'bx;
 				type = 2'bx;
+				wb = 1'b0;
 			end
 		endcase
 	end

@@ -1,9 +1,10 @@
 // FSM for processor and program counter.
 
-module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, reg_Wen, flagsEn);
+module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn);
 
 	input [1:0] type;
 	input clk;
+	input wb;
 	output reg PCe, Lscntl, WE, i_en, s_muxImm, reg_Wen, flagsEn;
 	
 	reg [3:0] state; 
@@ -53,7 +54,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, reg_Wen, flagsEn);
 					i_en = 0;
 					if (type == 2'b01) s_muxImm = 1;
 					else s_muxImm = 0;
-					reg_Wen = 1;
+					// enable if it's a writeback command
+					reg_Wen = wb;
 					flagsEn = 1;
 				end
 			default:

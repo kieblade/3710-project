@@ -179,7 +179,7 @@ begin
 	NOP:
 	   begin
 		C = 16'bxxxxxxxxxxxxxxxx;
-		Flags = 5'bxxxxx;
+		Flags = 5'b00000;
 		end
 	default:
 		begin

@@ -104,10 +104,11 @@ class myClass():
         func = switcher.get(name)
         return func()
 
-#    f = open(str(args[0]), 'r')
-#    wf = open(str(args[1]), 'w')
-    f = open('program.txt', 'r')
-    wf = open('data_file.txt', 'w')
+    f = open(str(args[0]), 'r')
+    out_name = str(args[1]) if len(args) >= 2 else str(args[0].rsplit('.', 1)[0] + '.b')
+    wf = open(out_name, 'w')
+    # f = open('program.txt', 'r')
+    # wf = open('data_file.txt', 'w')
 
     for x in f:
         line = x.split('#')[0]

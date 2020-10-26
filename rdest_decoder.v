@@ -6,7 +6,7 @@ module rdest_decoder(
 	output reg [15:0] regEnable
 );
 	
-	always @(reg_en) begin
+	always @(reg_en, reg_Wen) begin
 		if (reg_Wen)
 		begin
 			case(reg_en)

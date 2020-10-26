@@ -1,14 +1,16 @@
-module program_counter(addr_in, addr_out, en);
+module program_counter(clk, reset, addr_in, addr_out, en);
 	input [9:0] addr_in;
-	input en;
+	input en, clk, reset;
 	output reg [9:0] addr_out;
 	
-	always @(posedge en)
+	always @(posedge clk)
 	begin
-		if (en == 1'b1)
-			addr_out = addr_in;
+		if (reset == 1'b1) addr_out <= 10'd0;
 		else
-			addr_out = addr_out;
+			if (en == 1'b1)
+				addr_out <= addr_in;
+			else
+				addr_out <= addr_out;
 	end
 
 endmodule
