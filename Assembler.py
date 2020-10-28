@@ -7,6 +7,8 @@ class myClass():
     Immediates = ['ADDI', 'ADDUI', 'ADDCI', 'ADDCUI', 'SUBI', 'CMPI', 'CMPUI', 'ANDI', 'ORI', 'XORI']
     Shift = ['LSH', 'RSH', 'ALSH', 'ARSH']
     ImmdShift = ['LSHI', 'RSHI', 'ALSHI', 'ARSHI']
+    Branch = ['BEQ', 'BNE', 'BGE', 'BCS', 'BCC', 'BHI', 'BLS', 'BLO', 'BHS', 'BGT', 'BLE', 'BFS', 'BFC', 'BLT', 'BUC']
+    Jump = ['JEQ', 'JNE', 'JGE', 'JCS', 'JCC', 'JHI', 'JLS', 'JLO', 'JHS', 'JGT', 'JLE', 'JFS', 'JFC', 'JLT', 'JUC']
     registers = ['%r0', '%r1', '%r2', '%r3', '%r4', '%r5', '%r6', '%r7', '%r8', '%r9', '%r10', '%r11', '%r12', '%r13', '%r14', '%r15']
 
     def ADD():
@@ -69,6 +71,51 @@ class myClass():
     def ARSHI():
         return '1011'
 
+    def EQ():
+        return '0000'
+    
+    def NE():
+        return '0001'
+    
+    def GE():
+        return '1101'
+    
+    def CS():
+        return '0010'
+    
+    def CC():
+        return '0011'
+    
+    def HI():
+        return '0100'
+    
+    def LS():
+        return '0101'
+    
+    def LO():
+        return '1010'
+    
+    def HS():
+        return '1011'
+    
+    def GT():
+        return '0110'
+    
+    def LE():
+        return '0111'
+    
+    def FS():
+        return '1000'
+    
+    def FC():
+        return '1001'
+    
+    def LT():
+        return '1100'
+    
+    def UC():
+        return '1110'
+
     switcher = {
         'ADD': ADD,
         'ADDU': ADDU,
@@ -97,8 +144,39 @@ class myClass():
         'ALSH': ALSH,
         'ALSHI': ALSHI,
         'ARSH': ARSH,
-        'ARSHI': ARSHI
+        'ARSHI': ARSHI,
+        'EQ' : EQ,
+        'NE' : NE,
+        'GE' : GE,
+        'CS' : CS,
+        'CC' : CC,
+        'HI' : HI,
+        'LS' : LS,
+        'LO' : LO,
+        'HS' : HS,
+        'GT' : GT,
+        'LE' : LE,
+        'FS' : FS,
+        'FC' : FC,
+        'LT' : LT,
+        'UC' : UC
     }
+    # EQ 0 0 0 0 Equal Z=1
+    # NE 0 0 0 1 Not Equal Z=0
+    # GE 1 1 0 1 Greater than or Equal N=1 or Z=1
+    # CS 0 0 1 0 Carry Set C=1
+    # CC 0 0 1 1 Carry Clear C=0
+    # HI 0 1 0 0 Higher than L=1
+    # LS 0 1 0 1 Lower than or Same as L=0
+    # LO 1 0 1 0 Lower than L=0 and Z=0
+    # HS 1 0 1 1 Higher than or Same as L=1 or Z=1
+    # GT 0 1 1 0 Greater Than N=1
+    # LE 0 1 1 1 Less than or Equal N=0
+    # FS 1 0 0 0 Flag Set F=1
+    # FC 1 0 0 1 Flag Clear F=0
+    # LT 1 1 0 0 Less Than N=0 and Z=0
+    # UC 1 1 1 0 Unconditional N/A
+    # 1 1 1 1 Never Jump N/A
 
     def instrCode(name):
         func = switcher.get(name)
@@ -133,13 +211,15 @@ class myClass():
                     Immd = parts.pop(0)
                     secondReg = parts.pop(0)
                     if ((Immd[0] in '$') and (secondReg in registers)):
-                        immediate = int(Immd.replace('$', ''))
-                        if immediate < 0:
-                            # gives the equivalent in negative
-                            immediate = ((-1 * immediate) ^ 255) + 1
-                        imm_str = '{0:08b}'.format(immediate)
+                        immdInt = int(Immd.replace('$', ''))
+                        if ((immdInt > 255) or (-255 > immdInt)):
+                            sys.exit('Syntax Error: Immediate can not be larger then 255 or less then -255')
+                        elif (immdInt >= 0): 
+                            immediate = '{0:08b}'.format(immdInt)
+                        else:
+                            immediate = '{0:08b}'.format(immdInt + 256)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = instrCode(instr) + secondRegNum + imm_str;
+                        data = instrCode(instr) + secondRegNum + immediate;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate operations need an immd then a register')
@@ -163,7 +243,13 @@ class myClass():
                     Immd = parts.pop(0)
                     secondReg = parts.pop(0)
                     if ((Immd[0] in '$') and (secondReg in registers)):
-                        immediate = '{0:08b}'.format(int(Immd.replace('$', '')))
+                        immdInt = int(Immd.replace('$', ''))
+                        if ((immdInt > 15) or (-15 > immdInt)):
+                            sys.exit('Syntax Error: Immediate can not be larger then 15 or less then -15')
+                        elif (immdInt >= 0): 
+                            immediate = '{0:08b}'.format(immdInt)
+                        else:
+                            immediate = '{0:08b}'.format(immdInt + 16)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
                         data = '1000' + secondRegNum + instrCode(instr) + immediate[4:8];
                         wf.write(data + '\n')
@@ -171,6 +257,34 @@ class myClass():
                         sys.exit('Syntax Error: Immediate shifts need an immd then a register')
                 else:
                     sys.exit('Syntax Error: Immediate shifts need two args')
+            elif (instr in Branch):
+                if (len(parts) == 1):
+                    Disp = parts.pop(0)
+                    if (Disp[0] in '$'):
+                        dispInt = int(Disp.replace('$', ''))
+                        if ((dispInt > 255) or (-255 > dispInt)):
+                            sys.exit('Syntax Error: Branch can not be larger then 255 or less then -255')
+                        elif (dispInt >= 0): 
+                            Displacement = '{0:08b}'.format(dispInt)
+                        else:
+                            Displacement = '{0:08b}'.format(dispInt + 256)
+                        data = '1110' + instrCode(instr.replace('B', '')) + Displacement;
+                        wf.write(data + '\n')
+                    else:
+                        sys.exit('Syntax Error: Branch operations need a displacement')
+                else:
+                    sys.exit('Syntax Error: Branch operations need one arg')
+            elif (instr in Jump):
+                if (len(parts) == 1):
+                    firstReg = parts.pop(0)
+                    if ((firstReg in registers)):
+                        firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
+                        data = '0100' + instrCode(instr.replace('J', '')) + '1100' + firstRegNum;
+                        wf.write(data + '\n')
+                    else:
+                        sys.exit('Syntax Error: Jump operations need a register')
+                else:
+                    sys.exit('Syntax Error: Jump operations need one arg')
             elif (instr == 'NOT'):
                 if (len(parts) == 1):
                     firstReg = parts.pop(0)
@@ -208,6 +322,19 @@ class myClass():
                         sys.exit('Syntax Error: store needs two registers')
                else:
                    sys.exit('Syntax Error: store needs two args')
+            elif (instr == 'JALR'):
+                if (len(parts) == 2):
+                    firstReg = parts.pop(0)
+                    secondReg = parts.pop(0)
+                    if ((firstReg in registers) and (secondReg in registers)):
+                        firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
+                        secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
+                        data = '0100' + firstRegNum + '1000' + secondRegNum;
+                        wf.write(data + '\n')
+                    else:
+                        sys.exit('Syntax Error: JALR needs two registers')
+                else:
+                    sys.exit('Syntax Error: JALR needs two args')
             elif (instr == 'NOP'):
                if (len(parts) == 0):
                     data = '0000000000000000';

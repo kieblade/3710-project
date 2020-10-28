@@ -48,7 +48,7 @@ module decoder (
 	parameter STOR  = 8'b 0100_0100;
 	parameter JALR  = 8'b 0100_1000;
 	parameter Jcond = 8'b 0100_1100;
-	//parameter Bcond = 8'b ????
+	//parameter Bcond = 8'b 1110_xxxx; ????
 	
 	parameter NOP   = 8'b 0000_0000;
 	
