@@ -217,7 +217,7 @@ class myClass():
                         elif (immdInt >= 0): 
                             immediate = '{0:08b}'.format(immdInt)
                         else:
-                            immediate = '{0:08b}'.format(immdInt + 256)
+                            immediate = '{0:08b}'.format(((-1 * immdInt) ^ 255) + 1)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
                         data = instrCode(instr) + secondRegNum + immediate;
                         wf.write(data + '\n')
@@ -247,11 +247,11 @@ class myClass():
                         if ((immdInt > 15) or (-15 > immdInt)):
                             sys.exit('Syntax Error: Immediate can not be larger then 15 or less then -15')
                         elif (immdInt >= 0): 
-                            immediate = '{0:08b}'.format(immdInt)
+                            immediate = '{0:04b}'.format(immdInt)
                         else:
-                            immediate = '{0:08b}'.format(immdInt + 16)
+                            immediate = '{0:04b}'.format(((-1 * immdInt) ^ 15) + 1)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '1000' + secondRegNum + instrCode(instr) + immediate[4:8];
+                        data = '1000' + secondRegNum + instrCode(instr) + immediate;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate shifts need an immd then a register')
@@ -267,7 +267,7 @@ class myClass():
                         elif (dispInt >= 0): 
                             Displacement = '{0:08b}'.format(dispInt)
                         else:
-                            Displacement = '{0:08b}'.format(dispInt + 256)
+                            Displacement = '{0:08b}'.format(((-1 * dispInt) ^ 255) + 1)
                         data = '1110' + instrCode(instr.replace('B', '')) + Displacement;
                         wf.write(data + '\n')
                     else:
