@@ -23,9 +23,9 @@ module decoder (
 	parameter SUB   = 8'b 0000_1001;
 	parameter SUBI  = 8'b 1001_xxxx;
 	parameter CMP   = 8'b 0000_1011;
-	parameter CMPI  = 8'b 1011_xxxx;
+	parameter CMPI  = 8'b 1011_0000;
 	parameter CMPU  = 8'b 0000_1000; 
-	parameter CMPUI = 8'b 1100_xxxx;
+	parameter CMPUI = 8'b 1100_0000;
 	
 	parameter AND   = 8'b 0000_0001;
 	parameter ANDI  = 8'b 0001_xxxx;
@@ -110,11 +110,11 @@ module decoder (
 			LOAD, STOR:
 			begin
 				en_reg = instr[11:8];
-				s_muxA = 4'bx;
+				s_muxA = instr[11:8];
 				s_muxB = instr[3:0];
 				imm = 16'bx;
 				type = pType;
-				// may need to be corrected but only writeback on loads.
+				// may need to be corrected but only writeback on stores.
 				if (opcode == LOAD)
 					wb = 1'b0;
 				else

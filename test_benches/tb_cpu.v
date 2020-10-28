@@ -10,7 +10,7 @@ module tb_cpu();
 	wire [9:0] addr;
 	reg [15:0] data_out;
 	wire [15:0] data_in;
-	
+
 	reg [15:0] ram [1023:0];
 	
 	always @(posedge clk)
@@ -41,9 +41,8 @@ module tb_cpu();
 	endtask
 	
 	initial begin
-		// Note that each command currently takes 3 clock cycles to execute. 
-		// In order to get appropriate wait time take (lines in .b file) * 30
-		// to calculate the minimum time to wait.
+		// Note that most commands currently takes 3 clock cycles to execute. 
+		// Load and store each take 4 clock cycles
 		$display("Testbench begins...\n");
 		clk = 0;
 		reset = 1;
@@ -59,7 +58,7 @@ module tb_cpu();
 		if (verbose) $display("loading fibonacci.b");
 		$readmemb("../../mem_files/fibonacci.b", ram);
 		cycle_reset();
-		#460;
+		#450;
 		
 		if (r1 != 233) $display("Error executing Fibonacci! Expected 233, but got %d\n", r1);
 		if (verbose) $display("Fibonacci resulted in: %d\n", r1);
@@ -72,25 +71,33 @@ module tb_cpu();
 		if (flags != 5'b10000) $display("Error in comparison! Expected flags to be 10000 but got %b\n", flags);
 		if (verbose) $display("First comparison resulted in flags: %b\n", flags);
 		
-		#150;
+		#60;
 		
 		if (flags != 5'b00000) $display("Error in comparison! Expected flags to be 00000 but got %b\n", flags);
 		if (verbose) $display("Second comparison resulted in flags: %b\n", flags);
 		
-		#150;
+		#60;
 		
 		if (r1 != 16'd8) $display("Error in comparison! Expected r1 to be 8 but got %d\n", r1);
 		if (verbose) $display("Left shift resulted in %d\n", r1);
 		
-		#150;
+		#60;
 		
 		if (flags != 5'b00011) $display("Error in comparison! Expected flags to be 00011 but got %b\n", flags);
 		if (verbose) $display("Third comparison resulted in flags: %b\n", flags);
 		
-		#150;
+		#60;
 		
 		if (r1 != 16'd2) $display("Error in comparison! Expected r1 to be 2 but got %d\n", r1);
 		if (verbose) $display("Right shift resulted in %d\n", r1);
+		
+		if (verbose) $display("loading load-store.b\n");
+		$readmemb("../../mem_files/load-store.b", ram);
+		cycle_reset();
+		#570;
+		
+		if (r1 != 100) $display("Error executing load-store! Expected 100, but got %d\n", r1);
+		if (verbose) $display("load-store resulted in %d\n", r1);
 		
 		$display("Testbench ends\n");
 	end

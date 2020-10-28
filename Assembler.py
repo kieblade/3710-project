@@ -133,9 +133,13 @@ class myClass():
                     Immd = parts.pop(0)
                     secondReg = parts.pop(0)
                     if ((Immd[0] in '$') and (secondReg in registers)):
-                        immediate = '{0:08b}'.format(int(Immd.replace('$', '')))
+                        immediate = int(Immd.replace('$', ''))
+                        if immediate < 0:
+                            # gives the equivalent in negative
+                            immediate = ((-1 * immediate) ^ 255) + 1
+                        imm_str = '{0:08b}'.format(immediate)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = instrCode(instr) + secondRegNum + immediate;
+                        data = instrCode(instr) + secondRegNum + imm_str;
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate operations need an immd then a register')

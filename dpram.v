@@ -11,7 +11,7 @@ module dpram (
 	
 	initial
 	begin
-		$readmemb("./mem_files/fibonacci.b", ram);
+		$readmemb("./mem_files/load-store.b", ram);
 	end
 	
 	// Port A

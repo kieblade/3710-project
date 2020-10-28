@@ -3,11 +3,14 @@ module regFileInitializer(
 	clk, 
 	reset, 
 	a_select, 
-	b_select, 
+	b_select,
+	bus_select,
+	bus_data,
 	use_imm, 
 	immediate, 
 	opCode,
 	mux_a_out,
+	mux_b_out,
 	r0,
 	r1,
 	r2,
@@ -30,13 +33,13 @@ module regFileInitializer(
 	
 	input clk, reset, use_imm;
 	input [7:0] opCode;
-	input [15:0] regEnable, immediate;
+	input [15:0] regEnable, immediate, bus_data;
 	input [3:0] a_select, b_select;
-	input flagsEn;
-	wire [15:0] aluBus, mux_b_out, inputMux_out;
+	input flagsEn, bus_select;
+	wire [15:0] aluBus, inputMux_out, alu_out;
 	wire [4:0] flagsIn;
 	output [15:0] r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
-	output [15:0] mux_a_out;
+	output [15:0] mux_a_out, mux_b_out;
 	output [4:0] flags;
 	
 	regfile regArray(
@@ -118,9 +121,16 @@ module regFileInitializer(
 		.A(mux_a_out),
 		.B(inputMux_out),
 		.carryIn(flags[3]),
-		.C(aluBus),
+		.C(alu_out),
 		.Opcode(opCode),
 		.Flags(flagsIn)
+	);
+	
+	inputMux bus_mux(
+		.select(bus_select),
+		.b(alu_out),
+		.immd(bus_data),
+		.out(aluBus)
 	);
 	
 endmodule
