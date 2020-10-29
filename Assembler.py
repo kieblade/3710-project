@@ -3,6 +3,8 @@ import sys
 class myClass():
   def method1(self):
     args = sys.argv[1:]
+    address = -1
+    labels = {}
     RType = ['ADD', 'ADDU', 'ADDC', 'ADDCU', 'SUB', 'CMP', 'CMPU', 'AND', 'OR', 'XOR']
     Immediates = ['ADDI', 'ADDUI', 'ADDCI', 'ADDCUI', 'SUBI', 'CMPI', 'CMPUI', 'ANDI', 'ORI', 'XORI']
     Shift = ['LSH', 'RSH', 'ALSH', 'ARSH']
@@ -161,26 +163,23 @@ class myClass():
         'LT' : LT,
         'UC' : UC
     }
-    # EQ 0 0 0 0 Equal Z=1
-    # NE 0 0 0 1 Not Equal Z=0
-    # GE 1 1 0 1 Greater than or Equal N=1 or Z=1
-    # CS 0 0 1 0 Carry Set C=1
-    # CC 0 0 1 1 Carry Clear C=0
-    # HI 0 1 0 0 Higher than L=1
-    # LS 0 1 0 1 Lower than or Same as L=0
-    # LO 1 0 1 0 Lower than L=0 and Z=0
-    # HS 1 0 1 1 Higher than or Same as L=1 or Z=1
-    # GT 0 1 1 0 Greater Than N=1
-    # LE 0 1 1 1 Less than or Equal N=0
-    # FS 1 0 0 0 Flag Set F=1
-    # FC 1 0 0 1 Flag Clear F=0
-    # LT 1 1 0 0 Less Than N=0 and Z=0
-    # UC 1 1 1 0 Unconditional N/A
-    # 1 1 1 1 Never Jump N/A
 
     def instrCode(name):
         func = switcher.get(name)
         return func()
+
+    f = open(str(args[0]), 'r')
+
+    for x in f:
+        line = x.split('#')[0]
+        parts = line.split()
+        if (len(parts) > 0):
+            if (line[0] == '.'):
+                labelAddress = address + 1
+                labels[parts.pop(0)] = labelAddress
+            else:
+                address = address + 1
+    f.close()
 
     f = open(str(args[0]), 'r')
     out_name = str(args[1]) if len(args) >= 2 else str(args[0].rsplit('.', 1)[0] + '.b')
@@ -188,10 +187,13 @@ class myClass():
     # f = open('program.txt', 'r')
     # wf = open('data_file.txt', 'w')
 
+    address = -1
+
     for x in f:
         line = x.split('#')[0]
         parts = line.split()
-        if (len(parts) > 0):
+        if ((len(parts) > 0) and (line[0] != '.')):
+            address = address + 1
             instr = parts.pop(0)
             if (instr in RType):
                 if (len(parts) == 2):
@@ -200,7 +202,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0000' + secondRegNum + instrCode(instr) + firstRegNum;
+                        data = '0000' + secondRegNum + instrCode(instr) + firstRegNum
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: R-type needs two registers')
@@ -219,7 +221,7 @@ class myClass():
                         else:
                             immediate = '{0:08b}'.format(((-1 * immdInt) ^ 255) + 1)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = instrCode(instr) + secondRegNum + immediate;
+                        data = instrCode(instr) + secondRegNum + immediate
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate operations need an immd then a register')
@@ -232,7 +234,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '1000' + secondRegNum + instrCode(instr) + firstRegNum;
+                        data = '1000' + secondRegNum + instrCode(instr) + firstRegNum
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: shifts needs two registers')
@@ -251,7 +253,7 @@ class myClass():
                         else:
                             immediate = '{0:04b}'.format(((-1 * immdInt) ^ 15) + 1)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '1000' + secondRegNum + instrCode(instr) + immediate;
+                        data = '1000' + secondRegNum + instrCode(instr) + immediate
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Immediate shifts need an immd then a register')
@@ -268,10 +270,20 @@ class myClass():
                             Displacement = '{0:08b}'.format(dispInt)
                         else:
                             Displacement = '{0:08b}'.format(((-1 * dispInt) ^ 255) + 1)
-                        data = '1110' + instrCode(instr.replace('B', '')) + Displacement;
+                        data = '1110' + instrCode(instr.replace('B', '')) + Displacement
+                        wf.write(data + '\n')
+                    elif (Disp[0] == '.'):
+                        dispInt = labels[Disp] - address
+                        if ((dispInt > 255) or (-255 > dispInt)):
+                            sys.exit('Syntax Error: Branch can not be larger then 255 or less then -255')
+                        elif (dispInt >= 0): 
+                            Displacement = '{0:08b}'.format(dispInt)
+                        else:
+                            Displacement = '{0:08b}'.format(((-1 * dispInt) ^ 255) + 1)
+                        data = '1110' + instrCode(instr.replace('B', '')) + Displacement
                         wf.write(data + '\n')
                     else:
-                        sys.exit('Syntax Error: Branch operations need a displacement')
+                        sys.exit('Syntax Error: Branch operations need a displacement or label')
                 else:
                     sys.exit('Syntax Error: Branch operations need one arg')
             elif (instr in Jump):
@@ -279,7 +291,7 @@ class myClass():
                     firstReg = parts.pop(0)
                     if ((firstReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
-                        data = '0100' + instrCode(instr.replace('J', '')) + '1100' + firstRegNum;
+                        data = '0100' + instrCode(instr.replace('J', '')) + '1100' + firstRegNum
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: Jump operations need a register')
@@ -290,7 +302,7 @@ class myClass():
                     firstReg = parts.pop(0)
                     if ((firstReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
-                        data = '0000' + firstRegNum + '11110000';
+                        data = '0000' + firstRegNum + '11110000'
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: NOT operation needs one register')
@@ -303,7 +315,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0100' + firstRegNum + '0000' + secondRegNum;
+                        data = '0100' + firstRegNum + '0000' + secondRegNum
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: load needs two registers')
@@ -316,7 +328,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0100' + firstRegNum + '0100' + secondRegNum;
+                        data = '0100' + firstRegNum + '0100' + secondRegNum
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: store needs two registers')
@@ -329,7 +341,7 @@ class myClass():
                     if ((firstReg in registers) and (secondReg in registers)):
                         firstRegNum = '{0:04b}'.format(int(firstReg.replace('%r', '')))
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
-                        data = '0100' + firstRegNum + '1000' + secondRegNum;
+                        data = '0100' + firstRegNum + '1000' + secondRegNum
                         wf.write(data + '\n')
                     else:
                         sys.exit('Syntax Error: JALR needs two registers')
@@ -337,7 +349,7 @@ class myClass():
                     sys.exit('Syntax Error: JALR needs two args')
             elif (instr == 'NOP'):
                if (len(parts) == 0):
-                    data = '0000000000000000';
+                    data = '0000000000000000'
                     wf.write(data + '\n')
                else:
                    sys.exit('Syntax Error: load needs two args')
