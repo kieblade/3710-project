@@ -167,9 +167,16 @@ class myClass():
     def instrCode(name):
         func = switcher.get(name)
         return func()
+    
+    def replaceLabel(label):
+        if (label[0] == '.'):
+            return '$' + str(labels[label])
+        else:
+            return label
 
     f = open(str(args[0]), 'r')
 
+    address = -1
     for x in f:
         line = x.split('#')[0]
         parts = line.split()
@@ -188,10 +195,9 @@ class myClass():
     # wf = open('data_file.txt', 'w')
 
     address = -1
-
     for x in f:
         line = x.split('#')[0]
-        parts = line.split()
+        parts = list(map(replaceLabel, line.split()))
         if ((len(parts) > 0) and (line[0] != '.')):
             address = address + 1
             instr = parts.pop(0)
@@ -356,6 +362,9 @@ class myClass():
             else:
                 sys.exit('Syntax Error: not a valid instruction')
 
+    while(address < 1023):
+        wf.write('0000000000000000\n')
+        address = address + 1
     wf.close()
     f.close()
 

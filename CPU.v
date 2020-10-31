@@ -10,13 +10,13 @@ module CPU
 	output [15:0] data_in,
 	input [15:0] data_out
 );	
-	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, out_B, imm, regEnable;
+	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, out_B, imm, regEnable, mem_pc_out;
 	wire [15:0] r0, /*r1 is and output to display output,*/ r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
-	wire [9:0] addr_A, addr_B, next_pc, address;
+	wire [9:0] addr_A, addr_B, next_pc, pc_mux_out, address;
 	wire [7:0] opcode;
 	wire [3:0] en_reg, s_muxA, s_muxB;
 	wire [1:0] type;
-	wire Lscntl, s_muxImm, WE, en_B, en_MAR, en_MDR, i_en, flagsEn, PCe, wb, s_mem_to_bus, reg_Wen;
+	wire mem_pc_ctrl, Lscntl, npc_ctrl, s_muxImm, WE, en_B, en_MAR, en_MDR, i_en, flagsEn, PCe, wb, s_mem_to_bus, reg_Wen;
 	
 	generate
 		if (overrideRAM == 1) begin
@@ -43,20 +43,29 @@ module CPU
 		.reg_Wen(reg_Wen),			// write enable for regFile (It's needed just trust me - Seth)
 		.flagsEn(flagsEn),			// write enable for flags register (it overwrites the flags if you don't have this)
 		.wb(wb),
-		.s_mem_to_bus(s_mem_to_bus)
+		.s_mem_to_bus(s_mem_to_bus),
+		.npc_ctrl(npc_ctrl),
+		.mem_pc_ctrl(mem_pc_ctrl)
 	);
 	
 	pc_incr increment(
-		.curr_pc(addr_A), 			// current address
+		.curr_pc(address), 			// current address
 		.diff(10'b1),					// amount to change address
 		.decr(1'b0),						// decrease address number
 		.next_pc(next_pc)				// next address
 	);
 	
+	inputMux pc_mux(
+		.b({6'b0, next_pc}),
+		.immd(mux_b_out),
+		.select(npc_ctrl),
+		.out(pc_mux_out)
+	);
+	
 	program_counter PC(
 		.clk(clk),
 		.reset(reset),
-		.addr_in(next_pc),			// next address
+		.addr_in(pc_mux_out),			// next address
 		.en(PCe),						// program counter enable
 		.addr_out(address)			// address out
 	);
@@ -105,7 +114,8 @@ module CPU
 		.s_muxB(s_muxB), 			 	// MUX B Select
 		.imm(imm), 				    	// Immediate
 		.type(type),						// instuction type
-		.wb(wb)
+		.wb(wb),
+		.flags(flagLEDs)
 	);
 	
 	rdest_decoder reg_decoder(
@@ -116,73 +126,53 @@ module CPU
 	
 	generate
 	if (overrideRAM == 0) begin
-		regFileInitializer alu(
-			.regEnable(regEnable),		// Which reg to enable
-			.clk(clk),		 				// clock
-			.reset(reset), 				// reset
-			.a_select(s_muxA), 			// mux select for mux A
-			.b_select(s_muxB), 			// mux select for mux B
-			.bus_select(s_mem_to_bus),
-			.bus_data(out_A),
-			.use_imm(s_muxImm), 			// mux select for immediate mux
-			.immediate(imm), 				// immediate
-			.opCode(opcode),				// opCode
-			.mux_a_out(mux_a_out),		// output from mux b
-			.mux_b_out(mux_b_out),
-			.r0(r0),							// register 1 output
-			.r1(r1),							// register 2 output
-			.r2(r2),							// register 3 output
-			.r3(r3),							// register 4 output
-			.r4(r4),							// register 5 output
-			.r5(r5),							// register 6 output
-			.r6(r6),							// register 7 output
-			.r7(r7),							// register 8 output
-			.r8(r8),							// register 9 output
-			.r9(r9),							// register 10 output
-			.r10(r10),						// register 11 output
-			.r11(r11),						// register 12 output
-			.r12(r12),						// register 13 output
-			.r13(r13),						// register 14 output
-			.r14(r14),						// register 15 output
-			.r15(r15),						// register 16 output
-			.flags(flagLEDs),				// flags
-			.flagsEn(flagsEn)          // write enable for flags register (it overwrites the flags if you don't have this)
+		inputMux mem_pc_mux(
+			.b(out_A),
+			.immd({6'b0, address}),
+			.select(mem_pc_ctrl),
+			.out(mem_pc_out)
 		);
 	end
 	else begin
-		regFileInitializer alu(
-			.regEnable(regEnable),		// Which reg to enable
-			.clk(clk),		 				// clock
-			.reset(reset), 				// reset
-			.a_select(s_muxA), 			// mux select for mux A
-			.b_select(s_muxB), 			// mux select for mux B
-			.bus_select(s_mem_to_bus),
-			.bus_data(data_out),  		// WHEN OVERRIDING RAM this signal should be fed by data_out
-			.use_imm(s_muxImm), 			// mux select for immediate mux
-			.immediate(imm), 				// immediate
-			.opCode(opcode),				// opCode
-			.mux_a_out(mux_a_out),		// output from mux b
-			.mux_b_out(mux_b_out),
-			.r0(r0),							// register 1 output
-			.r1(r1),							// register 2 output
-			.r2(r2),							// register 3 output
-			.r3(r3),							// register 4 output
-			.r4(r4),							// register 5 output
-			.r5(r5),							// register 6 output
-			.r6(r6),							// register 7 output
-			.r7(r7),							// register 8 output
-			.r8(r8),							// register 9 output
-			.r9(r9),							// register 10 output
-			.r10(r10),						// register 11 output
-			.r11(r11),						// register 12 output
-			.r12(r12),						// register 13 output
-			.r13(r13),						// register 14 output
-			.r14(r14),						// register 15 output
-			.r15(r15),						// register 16 output
-			.flags(flagLEDs),				// flags
-			.flagsEn(flagsEn)          // write enable for flags register (it overwrites the flags if you don't have this)
+		inputMux mem_pc_mux(
+			.b(data_out),
+			.immd({6'b0, address}),
+			.select(mem_pc_ctrl),
+			.out(mem_pc_out)
 		);
-
 	end
 	endgenerate
+	
+	regFileInitializer alu(
+		.regEnable(regEnable),		// Which reg to enable
+		.clk(clk),		 				// clock
+		.reset(reset), 				// reset
+		.a_select(s_muxA), 			// mux select for mux A
+		.b_select(s_muxB), 			// mux select for mux B
+		.bus_select(s_mem_to_bus),
+		.bus_data(mem_pc_out),
+		.use_imm(s_muxImm), 			// mux select for immediate mux
+		.immediate(imm), 				// immediate
+		.opCode(opcode),				// opCode
+		.mux_a_out(mux_a_out),		// output from mux b
+		.mux_b_out(mux_b_out),
+		.r0(r0),							// register 1 output
+		.r1(r1),							// register 2 output
+		.r2(r2),							// register 3 output
+		.r3(r3),							// register 4 output
+		.r4(r4),							// register 5 output
+		.r5(r5),							// register 6 output
+		.r6(r6),							// register 7 output
+		.r7(r7),							// register 8 output
+		.r8(r8),							// register 9 output
+		.r9(r9),							// register 10 output
+		.r10(r10),						// register 11 output
+		.r11(r11),						// register 12 output
+		.r12(r12),						// register 13 output
+		.r13(r13),						// register 14 output
+		.r14(r14),						// register 15 output
+		.r15(r15),						// register 16 output
+		.flags(flagLEDs),				// flags
+		.flagsEn(flagsEn)          // write enable for flags register (it overwrites the flags if you don't have this)
+	);
 endmodule 

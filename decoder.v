@@ -2,6 +2,7 @@
 
 module decoder (
 	input [15:0] instr,        // Instruction
+	input [4:0] flags,
 	output [7:0] opcode,       // Opcode for ALU
 	output reg [3:0] en_reg,   // Regfile enables (Rdest)
 	output reg [3:0] s_muxA,   // MUX A Select
@@ -48,7 +49,7 @@ module decoder (
 	parameter STOR  = 8'b 0100_0100;
 	parameter JALR  = 8'b 0100_1000;
 	parameter Jcond = 8'b 0100_1100;
-	//parameter Bcond = 8'b 1110_xxxx; ????
+	// parameter Bcond = 8'b 1110_xxxx; ????
 	
 	parameter NOP   = 8'b 0000_0000;
 	
@@ -121,7 +122,7 @@ module decoder (
 					wb = 1'b1;
 			end
 			// Jump/branch operations
-			JALR, Jcond:
+			JALR:
 			begin
 				// TODO: Update to handle conditionals
 				en_reg = instr[11:8];
@@ -129,8 +130,52 @@ module decoder (
 				s_muxB = instr[3:0];
 				imm = 16'bx;
 				type = jType;
-				// no writeback
+				wb = 1'b1;
+			end
+			Jcond:
+			begin
+				en_reg = 4'bx;
+				s_muxA = 4'bx;
+				s_muxB = instr[3:0];
+				imm = 16'bx;
 				wb = 1'b0;
+				
+				// check for the condition
+						// EQ check for equality
+				if (((instr[11:8] == 4'b0000 & flags[4] == 1'b1) | 
+						// NE not equal
+						(instr[11:8] == 4'b0001 & flags[4] == 1'b0) |
+						// CS carry set
+						(instr[11:8] == 4'b0010 & flags[3] == 1'b1) |
+						// CC carry clear
+						(instr[11:8] == 4'b0011 & flags[3] == 1'b0) |
+						// HI higher than
+						(instr[11:8] == 4'b0100 & flags[1] == 1'b1) |
+						// LS lower than or same as
+						(instr[11:8] == 4'b0101 & flags[1] == 1'b0) |
+						// GT greater than
+						(instr[11:8] == 4'b0110 & flags[0] == 1'b1) |
+						// LE less than or equal
+						(instr[11:8] == 4'b0111 & flags[0] == 1'b0) |
+						// FS flag set
+						(instr[11:8] == 4'b1000 & flags[2] == 1'b1) |
+						// FC flag clear
+						(instr[11:8] == 4'b1001 & flags[2] == 1'b0) |
+						// LO lower than
+						(instr[11:8] == 4'b1010 & (flags[1] == 1'b0 | flags[4] == 1'b0)) |
+						// HS higher than or same as
+						(instr[11:8] == 4'b1011 & (flags[1] == 1'b1 | flags[4] == 1'b1)) |
+						// LT less than
+						(instr[11:8] == 4'b1100 & flags[0] == 1'b0 & flags[4] == 1'b0) |
+						// GE greater than or equal
+						(instr[11:8] == 4'b1101 & (flags[0] == 1'b1 | flags[4] == 1'b1)) |
+						// UNC unconditional
+						(instr[11:8] == 4'b1110)) == 1'b1)
+					type = jType;
+				else
+					// makes it a nop
+					type = rType;
+				
 			end
 			// Invalid operations
 			default:

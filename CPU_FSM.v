@@ -1,6 +1,6 @@
 // FSM for processor and program counter.
 
-module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn, s_mem_to_bus);
+module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn, s_mem_to_bus, npc_ctrl, mem_pc_ctrl);
 	parameter rType = 2'b 00;  // ADD  r1, r2 (r1 = r1 + r2)
 	parameter iType = 2'b 01;  // ADDI r1, 16 (r0 = r1 + 16)
 	parameter pType = 2'b 10;  // LOAD r1, r0 (r1 = mem[r0])
@@ -9,7 +9,7 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 	input [1:0] type;
 	input clk;
 	input wb;
-	output reg PCe, Lscntl, WE, i_en, s_muxImm, reg_Wen, flagsEn, s_mem_to_bus;
+	output reg PCe, Lscntl, WE, i_en, s_muxImm, reg_Wen, flagsEn, s_mem_to_bus, npc_ctrl, mem_pc_ctrl;
 	
 	reg [3:0] state; 
 	parameter [4:0] S0 = 5'd0, S1  = 5'd1,  S2  = 5'd2,  S3  = 5'd3,  S4  = 5'd4,  S5  = 5'd5,  S6  = 5'd6,  S7  = 5'd7, S8 = 5'd8;
@@ -23,6 +23,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 						state <= S2;
 					pType: 
 						state <= S3;
+					jType:
+						state <= S6;
 					
 					// add jType later
 					default: state <= S0;
@@ -33,8 +35,11 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 			// pType
 			S3: state <= S4;
 			S4: state <= S5;
-			S5: state <= S6;
-			S6: state <= S0;
+			S5: state <= S0;
+			
+			// jType
+			S6: state <= S7;
+			S7: state <= S0;
 			
 			default: state <= S0;
 		endcase	
@@ -55,6 +60,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen = 0;
 					flagsEn = 0;
 					s_mem_to_bus = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
 			// decode
 			S1:                      
@@ -68,6 +75,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen = 0;
 					flagsEn = 0;
 					s_mem_to_bus = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
 			// rType instructions
 			// writes data into reg and does the setup time for memory
@@ -83,6 +92,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen = wb;
 					flagsEn = 1;
 					s_mem_to_bus = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
 				
 			// pType instructions
@@ -97,6 +108,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen = 0;
 					s_mem_to_bus = 0;
 					flagsEn = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
 			// using RAM
 			S4:
@@ -109,21 +122,11 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen = ~wb;
 					s_mem_to_bus = ~wb;
 					flagsEn = 0;
-				end
-			// hold time for memory
-			S5:
-				begin
-					PCe = 0;
-					Lscntl = 1;
-					WE = 0;
-					i_en = 0;
-					s_muxImm = 0;
-					reg_Wen = 0;
-					s_mem_to_bus = 0;
-					flagsEn = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
 			// increment the program counter and setup time for retrieving next instruction
-			S6:
+			S5:
 				begin
 					PCe = 1;
 					Lscntl = 1;
@@ -133,9 +136,40 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen = 0;
 					s_mem_to_bus = 0;
 					flagsEn = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
-			// changing the Lscntl requires 1 cycle of churn before data is available
-			// handled here by extra states before and after the actual loading
+				
+			// jType instructions
+			// store link and load next address
+			S6:
+				begin
+					PCe = 1;
+					Lscntl = 1;
+					WE = 0;
+					i_en = 0;
+					s_muxImm = 0;
+					flagsEn = 0;
+					// if we're writing back, store the current address in a reg
+					reg_Wen = wb;
+					s_mem_to_bus = wb;
+					npc_ctrl = 1;
+					mem_pc_ctrl = wb;
+				end
+			// setup time for next instruction
+			S7:
+				begin
+					PCe = 1;
+					Lscntl = 1;
+					WE = 0;
+					i_en = 0;
+					s_muxImm = 0;
+					flagsEn = 0;
+					reg_Wen = 0;
+					s_mem_to_bus = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
+				end
 			default:
 				begin 
 					PCe = 0;
@@ -146,6 +180,8 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					reg_Wen=  0;
 					flagsEn = 0;
 					s_mem_to_bus = 0;
+					npc_ctrl = 0;
+					mem_pc_ctrl = 0;
 				end
 		endcase
 	
