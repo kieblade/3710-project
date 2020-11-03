@@ -220,8 +220,8 @@ class myClass():
                     secondReg = parts.pop(0)
                     if ((Immd[0] in '$') and (secondReg in registers)):
                         immdInt = int(Immd.replace('$', ''))
-                        if ((immdInt > 255) or (-255 > immdInt)):
-                            sys.exit('Syntax Error: Immediate can not be larger then 255 or less then -255')
+                        if ((immdInt > 127) or (-128 > immdInt)):
+                            sys.exit('Syntax Error: Immediate can not be larger then 127 or less then -128')
                         elif (immdInt >= 0): 
                             immediate = '{0:08b}'.format(immdInt)
                         else:

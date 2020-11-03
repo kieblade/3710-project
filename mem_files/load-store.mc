@@ -10,7 +10,7 @@ ORI $-12 %r9
 
 # Create store addresses
 ORI $100 %r6
-ORI $200 %r8
+ORI $101 %r8
 
 # Store in memory
 STOR %r7 %r6

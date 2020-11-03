@@ -24,9 +24,9 @@ module decoder (
 	parameter SUB   = 8'b 0000_1001;
 	parameter SUBI  = 8'b 1001_xxxx;
 	parameter CMP   = 8'b 0000_1011;
-	parameter CMPI  = 8'b 1011_0000;
+	parameter CMPI  = 8'b 1011_xxxx;
 	parameter CMPU  = 8'b 0000_1000; 
-	parameter CMPUI = 8'b 1100_0000;
+	parameter CMPUI = 8'b 1100_XXXX;
 	
 	parameter AND   = 8'b 0000_0001;
 	parameter ANDI  = 8'b 0001_xxxx;
@@ -77,7 +77,8 @@ module decoder (
 				imm = $signed(instr[7:0]);
 				type = iType;
 				// don't writeback on cmp instructions
-				if (opcode == CMPI || opcode == CMPUI)
+				// only check the first few bits, others are x
+				if (opcode[7:4] == CMPI[7:4] || opcode[7:4] == CMPUI[7:4])
 					wb = 1'b0;
 				else
 					wb = 1'b1;

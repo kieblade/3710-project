@@ -35,6 +35,7 @@ module CPU
 	CPU_FSM FSM(
 		.type(type),					// instruction type
 		.clk(clk),						// clock
+		.reset(reset),
 		.PCe(PCe),						// program counter enable
 		.Lscntl(Lscntl),				// address mux select
 		.WE(WE),							// Write enable
@@ -91,6 +92,7 @@ module CPU
 				.out_B(out_B)					// data out of port B
 			);
 			instr_reg instruction_register(
+				.reset(reset),
 				.en(i_en),						// instruction register enable
 				.in(out_A),						// input address
 				.out(instr_out)				// output address
@@ -99,6 +101,7 @@ module CPU
 		else
 		begin
 			instr_reg instruction_register(
+				.reset(reset),
 				.en(i_en),						// instruction register enable
 				.in(data_out),						// input address
 				.out(instr_out)				// output address

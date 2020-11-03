@@ -23,6 +23,3 @@ JALR %r14 %r15
 # This is the end
 ANDI $0 %r1
 OR %r0 %r1
-
-NOP
-NOP

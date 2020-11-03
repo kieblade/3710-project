@@ -1,13 +1,13 @@
 // FSM for processor and program counter.
 
-module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn, s_mem_to_bus, npc_ctrl, mem_pc_ctrl);
+module CPU_FSM (type, reset, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn, s_mem_to_bus, npc_ctrl, mem_pc_ctrl);
 	parameter rType = 2'b 00;  // ADD  r1, r2 (r1 = r1 + r2)
 	parameter iType = 2'b 01;  // ADDI r1, 16 (r0 = r1 + 16)
 	parameter pType = 2'b 10;  // LOAD r1, r0 (r1 = mem[r0])
 	parameter jType = 2'b 11;  // JALR r0, r1 (r0 = PC + 1; PC = r1)
 
 	input [1:0] type;
-	input clk;
+	input clk, reset;
 	input wb;
 	output reg PCe, Lscntl, WE, i_en, s_muxImm, reg_Wen, flagsEn, s_mem_to_bus, npc_ctrl, mem_pc_ctrl;
 	
@@ -15,34 +15,36 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 	parameter [4:0] S0 = 5'd0, S1  = 5'd1,  S2  = 5'd2,  S3  = 5'd3,  S4  = 5'd4,  S5  = 5'd5,  S6  = 5'd6,  S7  = 5'd7, S8 = 5'd8;
 		
 	always @(posedge clk) begin
-		case(state)
-			S0: state <= S1;
-			S1:  
-				case (type)
-					iType, rType: 
-						state <= S2;
-					pType: 
-						state <= S3;
-					jType:
-						state <= S6;
-					
-					// add jType later
-					default: state <= S0;
-				endcase
-			// iType
-			S2:  state <= S0;
-			
-			// pType
-			S3: state <= S4;
-			S4: state <= S5;
-			S5: state <= S0;
-			
-			// jType
-			S6: state <= S7;
-			S7: state <= S0;
-			
-			default: state <= S0;
-		endcase	
+		if (reset == 1'b1) state <= S0;
+		else
+			case(state)
+				S0: state <= S1;
+				S1:  
+					case (type)
+						iType, rType: 
+							state <= S2;
+						pType: 
+							state <= S3;
+						jType:
+							state <= S6;
+						
+						default: state <= S0;
+					endcase
+				// iType
+				S2:  state <= S0;
+				
+				// pType
+				S3: state <= S4;
+				S4: state <= S5;
+				S5: state <= S0;
+				
+				// jType
+				S6: state <= S7;
+				S7: state <= S8;
+				S8: state <= S0;
+				
+				default: state <= S0;
+			endcase	
 	end
 	
 	
@@ -102,11 +104,11 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 				begin
 					PCe = 0;
 					Lscntl = 0;
-					WE = 0;
+					WE = wb;
 					i_en = 0;
 					s_muxImm = 0;
-					reg_Wen = 0;
-					s_mem_to_bus = 0;
+					reg_Wen = ~wb;
+					s_mem_to_bus = ~wb;
 					flagsEn = 0;
 					npc_ctrl = 0;
 					mem_pc_ctrl = 0;
@@ -128,7 +130,7 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 			// increment the program counter and setup time for retrieving next instruction
 			S5:
 				begin
-					PCe = 1;
+					PCe = 0;
 					Lscntl = 1;
 					WE = 0;
 					i_en = 0;
@@ -139,7 +141,7 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					npc_ctrl = 0;
 					mem_pc_ctrl = 0;
 				end
-				
+
 			// jType instructions
 			// store link and load next address
 			S6:
@@ -156,8 +158,21 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					npc_ctrl = 1;
 					mem_pc_ctrl = wb;
 				end
-			// setup time for next instruction
 			S7:
+				begin
+					PCe = 0;
+					Lscntl = 1;
+					WE = 0;
+					i_en = 0;
+					s_muxImm = 0;
+					flagsEn = 0;
+					reg_Wen = 0;
+					s_mem_to_bus = 0;
+					npc_ctrl = 1;
+					mem_pc_ctrl = 0;
+				end
+			// setup time for next instruction
+			S8:
 				begin
 					PCe = 1;
 					Lscntl = 1;
@@ -175,7 +190,7 @@ module CPU_FSM (type, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, flagsEn
 					PCe = 0;
 					Lscntl = 1;
 					WE = 0;
-					i_en = 1;
+					i_en = 0;
 					s_muxImm = 0;
 					reg_Wen=  0;
 					flagsEn = 0;

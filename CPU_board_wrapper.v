@@ -12,10 +12,10 @@ module CPU_board_wrapper(
 	wire [9:0] addr_ignored;
 	wire [15:0] data_in_ignored;
 	reg [15:0] data_out_ignored;
-
+		
 	CPU #(.overrideRAM(0)) cpu(
-		.clk(~clk),
-		.reset(reset),
+		.clk(clk),
+		.reset(~reset),
 		.flagLEDs(flagLEDs),
 		.r1(r1),
 		.write_en(write_en_ignored),

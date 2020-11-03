@@ -13,7 +13,7 @@ module clk_divider (clk_50MHz, rst, clk_1Hz);
 			count <= 25'd0;
 			clk_1Hz <= 0;
 		end
-		else if (count == 25_000_000)
+		else if (count == 25_00_000)
 		begin
 			count <= 25'd0;
 			clk_1Hz <= ~clk_1Hz;

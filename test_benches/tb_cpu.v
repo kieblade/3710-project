@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module tb_cpu();
-	parameter verbose = 0;
+	parameter verbose = 1;
 
 	reg clk, reset;
 	wire WE;
@@ -49,6 +49,7 @@ module tb_cpu();
 		#13
 		reset = 0;
 		#20;
+		
 		if (verbose) $display("loading initialize.b");
 		$readmemb("../../mem_files/initialize.b", ram);
 		#510;
@@ -102,7 +103,7 @@ module tb_cpu();
 		if (verbose) $display("loading basic-jump.b\n");
 		$readmemb("../../mem_files/basic-jump.b", ram);
 		cycle_reset();
-		#430;
+		#460;
 				
 		if (r1 != 60) $display("Error in basic jump! Expected 60 but got %d\n", r1);
 		if (verbose) $display("basic-jump resulted in %d\n", r1);
@@ -114,6 +115,12 @@ module tb_cpu();
 		
 		if (r1 != 987) $display("Error in conditional jump! Expected 987 but got %d\n", r1);
 		if (verbose) $display("Jump conditional resulted in %d\n", r1);
+		
+		$readmemb("../../mem_files/final-demo.b", ram);
+		cycle_reset();
+		#10000;
+		$display("Result: %d\n", r1);
+		
 		
 		$display("Testbench ends\n");
 	end
