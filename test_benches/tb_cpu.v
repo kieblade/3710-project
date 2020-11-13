@@ -116,6 +116,14 @@ module tb_cpu();
 		if (r1 != 987) $display("Error in conditional jump! Expected 987 but got %d\n", r1);
 		if (verbose) $display("Jump conditional resulted in %d\n", r1);
 		
+		if (verbose) $display("loading gameInput.b\n");
+		$readmemb("../../mem_files/gameInput.b", ram);
+		cycle_reset();
+		#570;
+		
+		if (r1 != 16'b0000000101010101) $display("Error in conditional jump! Expected 0000000101010101 but got %b\n", r1);
+		if (verbose) $display("Jump conditional resulted in %b\n", r1);
+		
 		$readmemb("../../mem_files/final-demo.b", ram);
 		cycle_reset();
 		#10000;

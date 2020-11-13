@@ -10,9 +10,9 @@ module CPU
 	output [15:0] data_in,
 	input [15:0] data_out
 );	
-	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, out_B, imm, regEnable, mem_pc_out;
+	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, out_B, imm, regEnable, mem_pc_out, gameInput;
 	wire [15:0] r0, /*r1 is and output to display output,*/ r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
-	wire [9:0] addr_A, addr_B, next_pc, pc_mux_out, address;
+	wire [15:0] addr_A, addr_B, next_pc, pc_mux_out, address;
 	wire [7:0] opcode;
 	wire [3:0] en_reg, s_muxA, s_muxB;
 	wire [1:0] type;
@@ -27,7 +27,7 @@ module CPU
 		begin
 			// these values are passed out when we override RAM
 			assign write_en = 1'b0;
-			assign addr = 10'b0;
+			assign addr = 16'b0;
 			assign data_in = 15'b0;
 		end
 	endgenerate
@@ -51,13 +51,13 @@ module CPU
 	
 	pc_incr increment(
 		.curr_pc(address), 			// current address
-		.diff(10'b1),					// amount to change address
+		.diff(16'b1),					// amount to change address
 		.decr(1'b0),						// decrease address number
 		.next_pc(next_pc)				// next address
 	);
 	
 	inputMux pc_mux(
-		.b({6'b0, next_pc}),
+		.b(next_pc),
 		.immd(mux_b_out),
 		.select(npc_ctrl),
 		.out(pc_mux_out)
@@ -74,7 +74,7 @@ module CPU
 	inputMux addressMux(
 		.select(Lscntl), 				// address mux select
 		.b(mux_b_out),					// address from program counter
-		.immd({6'b0, address}), 				// address from register
+		.immd(address), 				// address from register
 		.out(addr_A)					// adress to ram
 	);
 	
@@ -146,6 +146,14 @@ module CPU
 	end
 	endgenerate
 	
+	game_Inputs uut(
+		.clk(clk),
+		.reset(reset),
+		.controller(5'b10101),
+		.music(5'b01010),
+		.out(gameInput)
+	);
+	
 	regFileInitializer alu(
 		.regEnable(regEnable),		// Which reg to enable
 		.clk(clk),		 				// clock
@@ -154,6 +162,7 @@ module CPU
 		.b_select(s_muxB), 			// mux select for mux B
 		.bus_select(s_mem_to_bus),
 		.bus_data(mem_pc_out),
+		.gameInput(gameInput),
 		.use_imm(s_muxImm), 			// mux select for immediate mux
 		.immediate(imm), 				// immediate
 		.opCode(opcode),				// opCode

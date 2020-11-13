@@ -18,11 +18,11 @@ STOR %r9 %r8
 
 # Retrieve from memory
 LOAD %r14 %r6
-LOAD %r15 %r8
+LOAD %r13 %r8
 
 # Modify
-ADD %r14 %r15
+ADD %r14 %r13
 
 # Move to r1
 ANDI $0 %r1
-OR %r15 %r1
+OR %r13 %r1
