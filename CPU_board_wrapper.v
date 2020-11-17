@@ -1,6 +1,7 @@
 module CPU_board_wrapper(
 	input clk,
 	input reset,
+	input clk_select,
 	output [6:0] dsp_7seg_0,		// first hex value
 	output [6:0] dsp_7seg_1,		// second hex value
 	output [6:0] dsp_7seg_2,		// third hex value
@@ -12,9 +13,18 @@ module CPU_board_wrapper(
 	wire [9:0] addr_ignored;
 	wire [15:0] data_in_ignored;
 	reg [15:0] data_out_ignored;
+	wire slow_clk;
+	wire clk_in;
+	assign clk_in = (clk_select & slow_clk) | (~clk_select & clk);
+	
+	clk_divider #(.slowFactor(1_000_000)) (
+		.clk_50MHz(clk),
+		.rst(~reset),
+		.slowed_clk(slow_clk)
+	);
 		
 	CPU #(.overrideRAM(0)) cpu(
-		.clk(clk),
+		.clk(clk_in),
 		.reset(~reset),
 		.flagLEDs(flagLEDs),
 		.r1(r1),

@@ -1,8 +1,8 @@
-module clk_divider (clk_50MHz, rst, clk_1Hz);
+module clk_divider #( parameter slowFactor = 50000) (clk_50MHz, rst, slowed_clk);
 
 	input clk_50MHz, rst;
 	
-	output reg clk_1Hz;
+	output reg slowed_clk;
 	
 	reg [24:0] count;
 	
@@ -11,16 +11,16 @@ module clk_divider (clk_50MHz, rst, clk_1Hz);
 		if (rst == 1)
 		begin
 			count <= 25'd0;
-			clk_1Hz <= 0;
+			slowed_clk <= 0;
 		end
-		else if (count == 25_00_000)
+		else if (count >= slowFactor / 2)
 		begin
 			count <= 25'd0;
-			clk_1Hz <= ~clk_1Hz;
+			slowed_clk <= ~slowed_clk;
 		end
 		else
 		begin
-			clk_1Hz <= clk_1Hz;
+			slowed_clk <= slowed_clk;
 			count <= count + 25'd1;
 		end
 		
