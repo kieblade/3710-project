@@ -41,7 +41,7 @@ set_global_assignment -name DEVICE 5CSEMA5F31C6
 set_global_assignment -name TOP_LEVEL_ENTITY CPU_board_wrapper
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "13:28:15  SEPTEMBER 04, 2020"
-set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "16.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
@@ -86,40 +86,6 @@ set_location_assignment PIN_V16 -to flagLEDs[0]
 set_location_assignment PIN_W16 -to flagLEDs[1]
 set_location_assignment PIN_V17 -to flagLEDs[2]
 set_location_assignment PIN_V18 -to flagLEDs[3]
-set_global_assignment -name VERILOG_FILE test_benches/tb_regFileInitializer.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_regfile.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_program_counter.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_pc_incr.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_mux.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_Lab3.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_flagsReg.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_dpram.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_alu.v
-set_global_assignment -name VERILOG_FILE instr_reg.v
-set_global_assignment -name VERILOG_FILE clk_divider.v
-set_global_assignment -name VERILOG_FILE rdest_decoder.v
-set_global_assignment -name VERILOG_FILE CPU_FSM.v
-set_global_assignment -name VERILOG_FILE CPU.v
-set_global_assignment -name VERILOG_FILE decoder.v
-set_global_assignment -name VERILOG_FILE test_fsm.v
-set_global_assignment -name VERILOG_FILE dpram.v
-set_global_assignment -name VERILOG_FILE lab02.v
-set_global_assignment -name VERILOG_FILE inputMux.v
-set_global_assignment -name VERILOG_FILE fsm.v
-set_global_assignment -name VERILOG_FILE regfile.v
-set_global_assignment -name VERILOG_FILE mux.v
-set_global_assignment -name VERILOG_FILE flagsReg.v
-set_global_assignment -name VERILOG_FILE Lab1.v
-set_global_assignment -name VERILOG_FILE hexTo7Seg.v
-set_global_assignment -name VERILOG_FILE alu_Input.v
-set_global_assignment -name VERILOG_FILE alu.v
-set_global_assignment -name VERILOG_FILE regFileInitializer.v
-set_global_assignment -name VERILOG_FILE dpram_board_fsm.v
-set_global_assignment -name VERILOG_FILE lab3.v
-set_global_assignment -name VERILOG_FILE program_counter.v
-set_global_assignment -name VERILOG_FILE pc_incr.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_cpu.v
-set_global_assignment -name VERILOG_FILE CPU_board_wrapper.v
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to button_code[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to button_code[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to button_code
@@ -168,6 +134,40 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_Y21 -to clk_out
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk_out
-set_location_assignment PIN_AE12 -to clk_select
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk_select
+set_global_assignment -name VERILOG_FILE test_benches/tb_game_Inputs.v
+set_global_assignment -name VERILOG_FILE game_Inputs.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_regFileInitializer.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_regfile.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_program_counter.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_pc_incr.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_mux.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_Lab3.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_flagsReg.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_dpram.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_alu.v
+set_global_assignment -name VERILOG_FILE instr_reg.v
+set_global_assignment -name VERILOG_FILE clk_divider.v
+set_global_assignment -name VERILOG_FILE rdest_decoder.v
+set_global_assignment -name VERILOG_FILE CPU_FSM.v
+set_global_assignment -name VERILOG_FILE CPU.v
+set_global_assignment -name VERILOG_FILE decoder.v
+set_global_assignment -name VERILOG_FILE test_fsm.v
+set_global_assignment -name VERILOG_FILE dpram.v
+set_global_assignment -name VERILOG_FILE lab02.v
+set_global_assignment -name VERILOG_FILE inputMux.v
+set_global_assignment -name VERILOG_FILE fsm.v
+set_global_assignment -name VERILOG_FILE regfile.v
+set_global_assignment -name VERILOG_FILE mux.v
+set_global_assignment -name VERILOG_FILE flagsReg.v
+set_global_assignment -name VERILOG_FILE Lab1.v
+set_global_assignment -name VERILOG_FILE hexTo7Seg.v
+set_global_assignment -name VERILOG_FILE alu_Input.v
+set_global_assignment -name VERILOG_FILE alu.v
+set_global_assignment -name VERILOG_FILE regFileInitializer.v
+set_global_assignment -name VERILOG_FILE dpram_board_fsm.v
+set_global_assignment -name VERILOG_FILE lab3.v
+set_global_assignment -name VERILOG_FILE program_counter.v
+set_global_assignment -name VERILOG_FILE pc_incr.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_cpu.v
+set_global_assignment -name VERILOG_FILE CPU_board_wrapper.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

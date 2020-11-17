@@ -6,6 +6,7 @@ module regFileInitializer(
 	b_select,
 	bus_select,
 	bus_data,
+	gameInput,
 	use_imm, 
 	immediate, 
 	opCode,
@@ -33,7 +34,7 @@ module regFileInitializer(
 	
 	input clk, reset, use_imm;
 	input [7:0] opCode;
-	input [15:0] regEnable, immediate, bus_data;
+	input [15:0] regEnable, immediate, bus_data, gameInput;
 	input [3:0] a_select, b_select;
 	input flagsEn, bus_select;
 	wire [15:0] aluBus, inputMux_out, alu_out;
@@ -44,6 +45,7 @@ module regFileInitializer(
 	
 	regfile regArray(
 		.ALUBus(aluBus),
+		.gameInput(gameInput),
 		.r0(r0),
 		.r1(r1),
 		.r2(r2),

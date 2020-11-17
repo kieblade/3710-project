@@ -1,7 +1,7 @@
 // Given below is a 2D-memory array implementation 
-module regfile(ALUBus, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, regEnable, clk, reset);
+module regfile(ALUBus, gameInput, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, regEnable, clk, reset);
 	input clk, reset;
-	input [15:0] ALUBus;
+	input [15:0] ALUBus, gameInput;
 	input [15:0] regEnable;
 	
 	output [15:0] r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15; 
@@ -17,10 +17,13 @@ module regfile(ALUBus, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r1
 			if (reset == 1'b1)
 				r[i]<= 16'b0;
 			else
-				if(regEnable[i]==1'b1)
-					r[i] <= ALUBus;
+				if(i == 15)
+					r[i] <= gameInput;
 				else
-					r[i] <= r[i];
+					if(regEnable[i]==1'b1)
+						r[i] <= ALUBus;
+					else
+						r[i] <= r[i];
 		end
 	end
 	endgenerate
