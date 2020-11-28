@@ -12,6 +12,27 @@ module dpram (
 	initial
 	begin
 		$readmemb("./mem_files/final-demo.b", ram);
+		// Assuming data memory starts at 16'h1000
+		ram[16'hF000] = {4'h0, 12'd100};	// 1 fret
+		ram[16'hF001] = {4'h4, 12'd100};	// 2 fret
+		ram[16'hF002] = {4'h4, 12'd200};	// 3 fret
+		ram[16'hF003] = {4'h4, 12'd300};	// 4 fret
+		ram[16'hF004] = {4'h0, 12'd300};	// 5 fret
+		ram[16'hF005] = {4'h1, 12'd200};	// 6 fret
+		ram[16'hF006] = {4'h2, 12'd250};	// 7 fret
+		ram[16'hF007] = {4'h3, 12'd0};	// 8 fret
+		ram[16'hF008] = {4'h0, 12'd500};	// 9 fret
+		ram[16'hF009] = {4'h0, 12'd500};	// 10 fret
+		ram[16'hF00A] = {4'h0, 12'd500};	// 11 fret
+		ram[16'hF00B] = {4'h0, 12'd500};	// 12 fret
+		ram[16'hF00C] = {4'h0, 12'd500};	// 13 fret
+		ram[16'hF00D] = {4'h0, 12'd500};	// 14 fret
+		ram[16'hF00E] = {4'h0, 12'd500};	// 15 fret
+		ram[16'hF00F] = {4'h0, 12'd500};	// 16 fret
+		ram[16'hF010] = {4'h0, 12'd500};	// 17 fret
+		ram[16'hF011] = {4'h0, 12'd500};	// 18 fret
+		ram[16'hF012] = {4'h0, 12'd500};	// 19 fret
+		ram[16'hF013] = {4'h0, 12'd500};	// 20 fret
 	end
 	
 	// Port A

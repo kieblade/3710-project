@@ -6,7 +6,9 @@ module CPU_board_wrapper(
 	output [6:0] dsp_7seg_1,		// second hex value
 	output [6:0] dsp_7seg_2,		// third hex value
 	output [6:0] dsp_7seg_3,		// fourth hex value
-	output [4:0] flagLEDs			// flags
+	output [4:0] flagLEDs,			// flags
+	output vga_clk, vga_blank_n, vga_vs, vga_hs,
+	output [7:0] r, g, b
 );
 	wire [15:0] r1;
 	wire write_en_ignored;
@@ -17,20 +19,27 @@ module CPU_board_wrapper(
 	wire clk_in;
 	assign clk_in = (clk_select & slow_clk) | (~clk_select & clk);
 	
-	clk_divider #(.slowFactor(1_000_000)) (
+	clk_divider #(.slowFactor(1_000_000)) cd(
 		.clk_50MHz(clk),
 		.rst(~reset),
 		.slowed_clk(slow_clk)
 	);
 		
 	CPU #(.overrideRAM(0)) cpu(
-		.clk(clk_in),
+		.clk(clk),
 		.reset(~reset),
 		.flagLEDs(flagLEDs),
 		.r1(r1),
 		.write_en(write_en_ignored),
 		.addr(addr_ignored),
 		.data_in(data_in_ignored),
+		.vga_clk(vga_clk), 
+		.vga_blank_n(vga_blank_n), 
+		.vga_vs(vga_vs), 
+		.vga_hs(vga_hs),
+		.r(r), 
+		.g(g), 
+		.b(b),
 		.data_out(data_out_ignored)
 	);
 	
