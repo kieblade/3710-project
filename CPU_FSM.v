@@ -130,7 +130,7 @@ module CPU_FSM (type, reset, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, 
 			// increment the program counter and setup time for retrieving next instruction
 			S5:
 				begin
-					PCe = 0;
+					PCe = 1;
 					Lscntl = 1;
 					WE = 0;
 					i_en = 0;

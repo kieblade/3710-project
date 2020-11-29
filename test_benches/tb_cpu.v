@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module tb_cpu();
-	parameter verbose = 1;
+	parameter verbose = 0;
 
 	reg clk, reset;
 	wire WE;
@@ -68,7 +68,7 @@ module tb_cpu();
 		if (verbose) $display("loading fibonacci.b");
 		$readmemb("../../mem_files/fibonacci.b", ram);
 		cycle_reset();
-		#450;
+		#460;
 		
 		if (r1 != 233) $display("Error executing Fibonacci! Expected 233, but got %d\n", r1);
 		if (verbose) $display("Fibonacci resulted in: %d\n", r1);
@@ -76,7 +76,7 @@ module tb_cpu();
 		if (verbose) $display("loading comparisons.b");
 		$readmemb("../../mem_files/comparisons.b", ram);
 		cycle_reset();
-		#150;
+		#160;
 		
 		if (flags != 5'b10000) $display("Error in comparison! Expected flags to be 10000 but got %b\n", flags);
 		if (verbose) $display("First comparison resulted in flags: %b\n", flags);
@@ -104,7 +104,7 @@ module tb_cpu();
 		if (verbose) $display("loading load-store.b\n");
 		$readmemb("../../mem_files/load-store.b", ram);
 		cycle_reset();
-		#570;
+		#540;
 		
 		if (r1 != 100) $display("Error executing load-store! Expected 100, but got %d\n", r1);
 		if (verbose) $display("load-store resulted in %d\n", r1);
@@ -130,14 +130,9 @@ module tb_cpu();
 		cycle_reset();
 		#570;
 		
-		if (r1 != 16'b0000000101010101) $display("Error in conditional jump! Expected 0000000101010101 but got %b\n", r1);
-		if (verbose) $display("Jump conditional resulted in %b\n", r1);
-		
-		$readmemb("../../mem_files/final-demo.b", ram);
-		cycle_reset();
-		#10000;
-		$display("Result: %d\n", r1);
-		
+		if (r1 != 16'b0000000101010101) $display("Error in game input! Expected 0000000101010101 but got %b\n", r1);
+		if (verbose) $display("Game input resulted in %b\n", r1);
+
 		
 		$display("Testbench ends\n");
 	end
