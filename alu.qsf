@@ -41,7 +41,7 @@ set_global_assignment -name DEVICE 5CSEMA5F31C6
 set_global_assignment -name TOP_LEVEL_ENTITY CPU_board_wrapper
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "13:28:15  SEPTEMBER 04, 2020"
-set_global_assignment -name LAST_QUARTUS_VERSION "16.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
@@ -52,40 +52,7 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_location_assignment PIN_AF14 -to clk
-set_location_assignment PIN_AH28 -to dsp_7seg_0[6]
-set_location_assignment PIN_AG28 -to dsp_7seg_0[5]
-set_location_assignment PIN_AF28 -to dsp_7seg_0[4]
-set_location_assignment PIN_AG27 -to dsp_7seg_0[3]
-set_location_assignment PIN_AE28 -to dsp_7seg_0[2]
-set_location_assignment PIN_AE27 -to dsp_7seg_0[1]
-set_location_assignment PIN_AE26 -to dsp_7seg_0[0]
-set_location_assignment PIN_AD27 -to dsp_7seg_1[6]
-set_location_assignment PIN_AF30 -to dsp_7seg_1[5]
-set_location_assignment PIN_AF29 -to dsp_7seg_1[4]
-set_location_assignment PIN_AG30 -to dsp_7seg_1[3]
-set_location_assignment PIN_AH30 -to dsp_7seg_1[2]
-set_location_assignment PIN_AH29 -to dsp_7seg_1[1]
-set_location_assignment PIN_AJ29 -to dsp_7seg_1[0]
-set_location_assignment PIN_AC30 -to dsp_7seg_2[6]
-set_location_assignment PIN_AC29 -to dsp_7seg_2[5]
-set_location_assignment PIN_AD30 -to dsp_7seg_2[4]
-set_location_assignment PIN_AC28 -to dsp_7seg_2[3]
-set_location_assignment PIN_AD29 -to dsp_7seg_2[2]
-set_location_assignment PIN_AE29 -to dsp_7seg_2[1]
-set_location_assignment PIN_AB23 -to dsp_7seg_2[0]
-set_location_assignment PIN_AB22 -to dsp_7seg_3[6]
-set_location_assignment PIN_AB25 -to dsp_7seg_3[5]
-set_location_assignment PIN_AB28 -to dsp_7seg_3[4]
-set_location_assignment PIN_AC25 -to dsp_7seg_3[3]
-set_location_assignment PIN_AD25 -to dsp_7seg_3[2]
-set_location_assignment PIN_AC27 -to dsp_7seg_3[1]
-set_location_assignment PIN_AD26 -to dsp_7seg_3[0]
 set_location_assignment PIN_Y16 -to reset
-set_location_assignment PIN_W17 -to flagLEDs[4]
-set_location_assignment PIN_V16 -to flagLEDs[0]
-set_location_assignment PIN_W16 -to flagLEDs[1]
-set_location_assignment PIN_V17 -to flagLEDs[2]
-set_location_assignment PIN_V18 -to flagLEDs[3]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to button_code[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to button_code[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to button_code
@@ -129,10 +96,6 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_3[2]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_3[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_3[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to reset
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_location_assignment PIN_Y21 -to clk_out
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk_out
 set_global_assignment -name VERILOG_FILE register.v
 set_global_assignment -name VERILOG_FILE vga_control.v
@@ -204,4 +167,95 @@ set_location_assignment PIN_F10 -to vga_blank_n
 set_location_assignment PIN_A11 -to vga_clk
 set_location_assignment PIN_B11 -to vga_hs
 set_location_assignment PIN_D11 -to vga_vs
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to out[0]
+set_location_assignment PIN_Y21 -to r1[9]
+set_location_assignment PIN_W21 -to r1[8]
+set_location_assignment PIN_W20 -to r1[7]
+set_location_assignment PIN_Y19 -to r1[6]
+set_location_assignment PIN_W19 -to r1[5]
+set_location_assignment PIN_W17 -to r1[4]
+set_location_assignment PIN_V18 -to r1[3]
+set_location_assignment PIN_V17 -to r1[2]
+set_location_assignment PIN_W16 -to r1[1]
+set_location_assignment PIN_V16 -to r1[0]
+set_location_assignment PIN_AC18 -to music_in[4]
+set_location_assignment PIN_Y17 -to music_in[3]
+set_location_assignment PIN_AD17 -to music_in[2]
+set_location_assignment PIN_Y18 -to music_in[1]
+set_location_assignment PIN_AK16 -to music_in[0]
+set_location_assignment PIN_AK18 -to controller_in[4]
+set_location_assignment PIN_AK19 -to controller_in[3]
+set_location_assignment PIN_AJ19 -to controller_in[2]
+set_location_assignment PIN_AJ17 -to controller_in[1]
+set_location_assignment PIN_AJ16 -to controller_in[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller_in[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller_in[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller_in[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller_in[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to controller_in[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music_in[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music_in[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music_in[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music_in[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music_in[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to b[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to g[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_blank_n
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_clk
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_hs
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_vs
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

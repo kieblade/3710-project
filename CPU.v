@@ -2,6 +2,7 @@ module CPU
 #( parameter overrideRAM = 0)
 (
 	input clk,							// Clock
+	input clk_50MHz,
 	input reset,						// reset (resets the whole CPU and script sequence)
 	output [4:0] flagLEDs,			// flags
 	output [15:0] r1,
@@ -10,7 +11,8 @@ module CPU
 	output [15:0] data_in,
 	output vga_clk, vga_blank_n, vga_vs, vga_hs,
 	output [7:0] r, g, b,
-	input [15:0] data_out
+	input [15:0] data_out,
+	input [4:0] controller_in, music_in
 );	
 
 	localparam SYS_DATA_WIDTH=16, SYS_ADDR_WIDTH=16;
@@ -155,8 +157,8 @@ module CPU
 	game_Inputs uut(
 		.clk(clk),
 		.reset(reset),
-		.controller(5'b10101),
-		.music(5'b01010),
+		.controller(controller_in),
+		.music(music_in),
 		.out(gameInput)
 	);
 	
@@ -200,7 +202,7 @@ module CPU
 	defparam vga.GLYPH_ADDR_WIDTH = GLYPH_ADDR_WIDTH;
 	
 	vga vga (
-		.clk(clk), 
+		.clk(clk_50MHz), 
 		.reset(reset),
 		.sys_data(out_B),
 		.vga_clk(vga_clk), 
