@@ -28,6 +28,7 @@ output_files
 *.done
 *.eqn
 *.hex
+!glyphs.hex
 *.html
 *.jdi
 *.jpg
