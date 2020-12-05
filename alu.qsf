@@ -97,48 +97,6 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_3[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_3[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to reset
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk_out
-set_global_assignment -name VERILOG_FILE register.v
-set_global_assignment -name VERILOG_FILE vga_control.v
-set_global_assignment -name VERILOG_FILE vga.v
-set_global_assignment -name VERILOG_FILE glyph_rom.v
-set_global_assignment -name VERILOG_FILE glyph_addr_gen.v
-set_global_assignment -name VERILOG_FILE bitgen.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_game_Inputs.v
-set_global_assignment -name VERILOG_FILE game_Inputs.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_regFileInitializer.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_regfile.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_program_counter.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_pc_incr.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_mux.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_Lab3.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_flagsReg.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_dpram.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_alu.v
-set_global_assignment -name VERILOG_FILE instr_reg.v
-set_global_assignment -name VERILOG_FILE clk_divider.v
-set_global_assignment -name VERILOG_FILE rdest_decoder.v
-set_global_assignment -name VERILOG_FILE CPU_FSM.v
-set_global_assignment -name VERILOG_FILE CPU.v
-set_global_assignment -name VERILOG_FILE decoder.v
-set_global_assignment -name VERILOG_FILE test_fsm.v
-set_global_assignment -name VERILOG_FILE dpram.v
-set_global_assignment -name VERILOG_FILE lab02.v
-set_global_assignment -name VERILOG_FILE inputMux.v
-set_global_assignment -name VERILOG_FILE fsm.v
-set_global_assignment -name VERILOG_FILE regfile.v
-set_global_assignment -name VERILOG_FILE mux.v
-set_global_assignment -name VERILOG_FILE flagsReg.v
-set_global_assignment -name VERILOG_FILE Lab1.v
-set_global_assignment -name VERILOG_FILE hexTo7Seg.v
-set_global_assignment -name VERILOG_FILE alu_Input.v
-set_global_assignment -name VERILOG_FILE alu.v
-set_global_assignment -name VERILOG_FILE regFileInitializer.v
-set_global_assignment -name VERILOG_FILE dpram_board_fsm.v
-set_global_assignment -name VERILOG_FILE lab3.v
-set_global_assignment -name VERILOG_FILE program_counter.v
-set_global_assignment -name VERILOG_FILE pc_incr.v
-set_global_assignment -name VERILOG_FILE test_benches/tb_cpu.v
-set_global_assignment -name VERILOG_FILE CPU_board_wrapper.v
 set_location_assignment PIN_J14 -to b[7]
 set_location_assignment PIN_G15 -to b[6]
 set_location_assignment PIN_F15 -to b[5]
@@ -167,9 +125,6 @@ set_location_assignment PIN_F10 -to vga_blank_n
 set_location_assignment PIN_A11 -to vga_clk
 set_location_assignment PIN_B11 -to vga_hs
 set_location_assignment PIN_D11 -to vga_vs
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[4]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[3]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to music[2]
@@ -258,4 +213,49 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_blank_n
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_clk
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_hs
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to vga_vs
+set_global_assignment -name VERILOG_FILE register.v
+set_global_assignment -name VERILOG_FILE vga_control.v
+set_global_assignment -name VERILOG_FILE vga.v
+set_global_assignment -name VERILOG_FILE glyph_rom.v
+set_global_assignment -name VERILOG_FILE glyph_addr_gen.v
+set_global_assignment -name VERILOG_FILE bitgen.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_game_Inputs.v
+set_global_assignment -name VERILOG_FILE game_Inputs.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_regFileInitializer.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_regfile.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_program_counter.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_pc_incr.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_mux.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_Lab3.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_flagsReg.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_dpram.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_alu.v
+set_global_assignment -name VERILOG_FILE instr_reg.v
+set_global_assignment -name VERILOG_FILE clk_divider.v
+set_global_assignment -name VERILOG_FILE rdest_decoder.v
+set_global_assignment -name VERILOG_FILE CPU_FSM.v
+set_global_assignment -name VERILOG_FILE CPU.v
+set_global_assignment -name VERILOG_FILE decoder.v
+set_global_assignment -name VERILOG_FILE test_fsm.v
+set_global_assignment -name VERILOG_FILE dpram.v
+set_global_assignment -name VERILOG_FILE lab02.v
+set_global_assignment -name VERILOG_FILE inputMux.v
+set_global_assignment -name VERILOG_FILE fsm.v
+set_global_assignment -name VERILOG_FILE regfile.v
+set_global_assignment -name VERILOG_FILE mux.v
+set_global_assignment -name VERILOG_FILE flagsReg.v
+set_global_assignment -name VERILOG_FILE Lab1.v
+set_global_assignment -name VERILOG_FILE hexTo7Seg.v
+set_global_assignment -name VERILOG_FILE alu_Input.v
+set_global_assignment -name VERILOG_FILE alu.v
+set_global_assignment -name VERILOG_FILE regFileInitializer.v
+set_global_assignment -name VERILOG_FILE dpram_board_fsm.v
+set_global_assignment -name VERILOG_FILE lab3.v
+set_global_assignment -name VERILOG_FILE program_counter.v
+set_global_assignment -name VERILOG_FILE pc_incr.v
+set_global_assignment -name VERILOG_FILE test_benches/tb_cpu.v
+set_global_assignment -name VERILOG_FILE CPU_board_wrapper.v
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

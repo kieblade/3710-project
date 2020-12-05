@@ -89,7 +89,7 @@ module decoder (
 				en_reg = instr[11:8];
 				s_muxA = instr[11:8];
 				s_muxB = 4'bx;
-				imm = $signed(instr[4:0]);
+				imm = {12'b0, instr[4:0]};
 				type = iType;
 				wb = 1'b1;
 			end

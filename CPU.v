@@ -2,25 +2,21 @@ module CPU
 #( parameter overrideRAM = 0)
 (
 	input clk,							// Clock
-	input clk_50MHz,
 	input reset,						// reset (resets the whole CPU and script sequence)
 	output [4:0] flagLEDs,			// flags
 	output [15:0] r1,
 	output write_en,
 	output [15:0] addr,
 	output [15:0] data_in,
-	output vga_clk, vga_blank_n, vga_vs, vga_hs,
-	output [7:0] r, g, b,
 	input [15:0] data_out,
+	output [15:0] out_B,
+	input [15:0] addr_B,
 	input [4:0] controller_in, music_in
 );	
 
-	localparam SYS_DATA_WIDTH=16, SYS_ADDR_WIDTH=16;
-	localparam GLYPH_DATA_WIDTH=24, GLYPH_ADDR_WIDTH=14;
-
-	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, out_B, imm, regEnable, mem_pc_out, gameInput;
+	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, imm, regEnable, mem_pc_out, gameInput;
 	wire [15:0] r0, /*r1 is and output to display output,*/ r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
-	wire [15:0] addr_A, addr_B, next_pc, pc_mux_out, address;
+	wire [15:0] addr_A, next_pc, pc_mux_out, address;
 	wire [7:0] opcode;
 	wire [3:0] en_reg, s_muxA, s_muxB;
 	wire [1:0] type;
@@ -147,7 +143,7 @@ module CPU
 	else begin
 		inputMux mem_pc_mux(
 			.b(data_out),
-			.immd({6'b0, address}),
+			.immd(address),
 			.select(mem_pc_ctrl),
 			.out(mem_pc_out)
 		);
@@ -194,24 +190,5 @@ module CPU
 		.r15(r15),						// register 16 output
 		.flags(flagLEDs),				// flags
 		.flagsEn(flagsEn)          // write enable for flags register (it overwrites the flags if you don't have this)
-	);
-	
-	defparam vga.SYS_DATA_WIDTH = SYS_DATA_WIDTH;
-	defparam vga.SYS_ADDR_WIDTH = SYS_ADDR_WIDTH;
-	defparam vga.GLYPH_DATA_WIDTH = GLYPH_DATA_WIDTH;
-	defparam vga.GLYPH_ADDR_WIDTH = GLYPH_ADDR_WIDTH;
-	
-	vga vga (
-		.clk(clk_50MHz), 
-		.reset(reset),
-		.sys_data(out_B),
-		.vga_clk(vga_clk), 
-		.vga_blank_n(vga_blank_n), 
-		.vga_vs(vga_vs), 
-		.vga_hs(vga_hs),
-		.r(r), 
-		.g(g), 
-		.b(b),
-		.sys_addr(addr_B)
 	);
 endmodule 

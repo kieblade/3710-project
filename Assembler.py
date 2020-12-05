@@ -221,7 +221,7 @@ class myClass():
                     if ((Immd[0] in '$') and (secondReg in registers)):
                         immdInt = int(Immd.replace('$', ''))
                         if ((immdInt > 127) or (-128 > immdInt)):
-			    print('issue with ', line)
+                            print('issue with ', line)
                             sys.exit('Syntax Error: Immediate can not be larger then 127 or less then -128, got ' + str(immdInt))
                         elif (immdInt >= 0): 
                             immediate = '{0:08b}'.format(immdInt)

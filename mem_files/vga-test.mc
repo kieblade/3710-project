@@ -1,9 +1,11 @@
 # Initialize variables
+ANDI $0 %r2
 ANDI $0 %r6
 ANDI $0 %r7
 ANDI $0 %r8
 ANDI $0 %r9
 ANDI $0 %r1
+ANDI $0 %r10
 ANDI $0 %r11
 ANDI $0 %r12
 
@@ -14,19 +16,25 @@ ADD %r6 %r6  # r6 = 200
 ADD %r6 %r6  # r6 = 400
 ADD %r9 %r6  # r6 = 480
 
-NOT %r12
-LSHI $4 %r12
-RSHI $4 %r12
+ORI $12 %r2
+ORI $4 %r7 # r7 = 4
 
-# Create return value
-ORI $100 %r7 # r7 = 100
+NOT %r12
+RSH %r7 %r12
+ANDI $0 %r7
+ORI $1 %r7 # r7 = 1
+NOT %r10
+RSH %r7 %r10
+ANDI $0 %r7
+OR %r10 %r7
+
 
 # Store address in register
 ORI $15 %r8 # r8 = 15
 LSHI $12 %r8
 ORI $15 %r11
 LSHI $12 %r11
-ADDI $5 %r11
+ADDI $3 %r11
 
 # Store lables in register
 ANDI $0 %r3 # r3 = 0
@@ -49,13 +57,17 @@ ADDI $4 %r1
 
 # if r1 >= 480
 ANDI $0 %r13
-AND %r12 %r13
+OR %r12 %r13
 AND %r1 %r13
 CMP %r13 %r6
 JGE %r5
 
+ANDI $0 %r14
 .store_postition
 # Store in memory
+ADDI $1 %r14
+CMP %r14 %r7
+JLT %r3
 STOR %r1 %r8
 NOP
 NOP
@@ -65,7 +77,7 @@ JGT %r10
 JUC %r4
 
 .Return
-RSHI $12 %r1
+RSH %r2 %r1
 LSHI $12 %r1
 JUC %r3
 

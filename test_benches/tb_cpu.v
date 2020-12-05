@@ -9,8 +9,6 @@ module tb_cpu();
 	wire [15:0] r1;
 	wire [15:0] addr;
 	reg [15:0] data_out;
-	wire vga_clk, vga_blank_n, vga_vs, vga_hs;
-	wire [7:0] r, g, b;
 	wire [15:0] data_in;
 
 	reg [15:0] ram [65535:0];
@@ -30,13 +28,6 @@ module tb_cpu();
 		.write_en(WE),
 		.addr(addr),
 		.data_out(data_out),
-		.vga_clk(vga_clk), 
-		.vga_blank_n(vga_blank_n), 
-		.vga_vs(vga_vs), 
-		.vga_hs(vga_hs),
-		.r(r), 
-		.g(g), 
-		.b(b),
 		.data_in(data_in)
 	);
 	

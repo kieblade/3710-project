@@ -12,9 +12,13 @@ module CPU_board_wrapper(
 	output [7:0] r, g, b,
 	output [15:0] r1
 );
+
+	localparam SYS_DATA_WIDTH=16, SYS_ADDR_WIDTH=16;
+	localparam GLYPH_DATA_WIDTH=24, GLYPH_ADDR_WIDTH=14;
+	
 	// wire [15:0] r1;
 	wire write_en_ignored;
-	wire [9:0] addr_ignored;
+	wire [15:0] addr_ignored, addr_B, out_B;
 	wire [15:0] data_in_ignored;
 	reg [15:0] data_out_ignored;
 	wire slow_clk;
@@ -28,14 +32,30 @@ module CPU_board_wrapper(
 	);
 		
 	CPU #(.overrideRAM(0)) cpu(
-		.clk(slow_clk),
-		.clk_50MHz(clk),
+		.clk(clk),
 		.reset(~reset),
 		.flagLEDs(flagLEDs),
 		.r1(r1),
 		.write_en(write_en_ignored),
 		.addr(addr_ignored),
 		.data_in(data_in_ignored),
+		.data_out(data_out_ignored),
+		.out_B(out_B),
+		.addr_B(addr_B),
+		.controller_in(controller_in),
+		.music_in(music_in)
+	);
+	
+	
+	defparam vga.SYS_DATA_WIDTH = SYS_DATA_WIDTH;
+	defparam vga.SYS_ADDR_WIDTH = SYS_ADDR_WIDTH;
+	defparam vga.GLYPH_DATA_WIDTH = GLYPH_DATA_WIDTH;
+	defparam vga.GLYPH_ADDR_WIDTH = GLYPH_ADDR_WIDTH;
+	
+	vga vga (
+		.clk(clk), 
+		.reset(~reset),
+		.sys_data(out_B),
 		.vga_clk(vga_clk), 
 		.vga_blank_n(vga_blank_n), 
 		.vga_vs(vga_vs), 
@@ -43,9 +63,7 @@ module CPU_board_wrapper(
 		.r(r), 
 		.g(g), 
 		.b(b),
-		.data_out(data_out_ignored),
-		.controller_in(controller_in),
-		.music_in(music_in)
+		.sys_addr(addr_B)
 	);
 	
 //	hexTo7Seg hex0(
