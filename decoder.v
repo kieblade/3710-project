@@ -83,13 +83,13 @@ module decoder (
 				else
 					wb = 1'b1;
 			end
-			// 5-bit immediate operations
+			// 4-bit immediate operations
 			LSHI, RSHI, ALSHI, ARSHI:
 			begin
 				en_reg = instr[11:8];
 				s_muxA = instr[11:8];
 				s_muxB = 4'bx;
-				imm = {12'b0, instr[4:0]};
+				imm = {12'b0, instr[3:0]};
 				type = iType;
 				wb = 1'b1;
 			end

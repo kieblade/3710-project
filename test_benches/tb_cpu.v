@@ -70,7 +70,7 @@ module tb_cpu();
 		reset = 0;
 		#20;
 		
-		$readmemb("../../mem_files/vga-test.b", ram);
+		$readmemb("../../mem_files/rshi-test.b", ram);
 		#1000;
 
 //		if (verbose) $display("loading initialize.b");
