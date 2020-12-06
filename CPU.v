@@ -32,7 +32,7 @@ module CPU
 			// these values are passed out when we override RAM
 			assign write_en = 1'b0;
 			assign addr = 16'b0;
-			assign data_in = 15'b0;
+			assign data_in = 16'b0;
 		end
 	endgenerate
 	

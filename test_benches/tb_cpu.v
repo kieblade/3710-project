@@ -70,8 +70,8 @@ module tb_cpu();
 		reset = 0;
 		#20;
 		
-		$readmemb("../../mem_files/rshi-test.b", ram);
-		#1000;
+//		$readmemb("../../mem_files/rshi-test.b", ram);
+//		#1000;
 
 //		if (verbose) $display("loading initialize.b");
 //		$readmemb("../../mem_files/initialize.b", ram);
@@ -115,14 +115,14 @@ module tb_cpu();
 //		if (r1 != 16'd2) $display("Error in comparison! Expected r1 to be 2 but got %d\n", r1);
 //		if (verbose) $display("Right shift resulted in %d\n", r1);
 //		
-//		if (verbose) $display("loading load-store.b\n");
-//		$readmemb("../../mem_files/load-store.b", ram);
-//		cycle_reset();
-//		#540;
-//		
-//		if (r1 != 100) $display("Error executing load-store! Expected 100, but got %d\n", r1);
-//		if (verbose) $display("load-store resulted in %d\n", r1);
-//		
+		if (verbose) $display("loading load-store.b\n");
+		$readmemb("../../mem_files/load-store.b", ram);
+		cycle_reset();
+		#540;
+		
+		if (r1 != 100) $display("Error executing load-store! Expected 100, but got %d\n", r1);
+		if (verbose) $display("load-store resulted in %d\n", r1);
+		
 //		if (verbose) $display("loading basic-jump.b\n");
 //		$readmemb("../../mem_files/basic-jump.b", ram);
 //		cycle_reset();
