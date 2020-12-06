@@ -18,15 +18,15 @@ ANDI $0 %r10
 OR %r8 %r10
 ADDI $20 %r10
 
-# r11 is the check glyph pointer
-ANDI $0 %r11
-OR %r8 %r11
-
 # r14 points to the player score
 ANDI $0 %r14
 NOT %r14
 ANDI $0 %r9
 STOR %r9 %r14
+
+ANDI $0 %r9
+ORI .main_loop_start %r9
+JUC %r9
 
 .bump
 ADDI $4 %r0
@@ -34,9 +34,8 @@ STOR %r0 %r11
 
 # go home
 ANDI $0 %r9
-ORI .glyph_move %r9
+ORI .glyph_next %r9
 JUC %r9
-
 
 .main_loop_start
 ANDI $0 %r5
@@ -73,10 +72,9 @@ JEQ %r9 # if r4 is 0, move to the next note
 ANDI $0 %r6
 .count_loop
 # if r4 > 256
-CMP %r4 %r7
-
 ANDI $0 %r9
 ORI .count_loop_end %r9
+CMP %r4 %r7
 JGT %r9
 # else
 LSHI $1 %r4
@@ -95,9 +93,9 @@ ADDI $1 %r3
 ANDI $0 %r9
 ORI .continue %r9
 
-# if r3 < r10
-CMP %r3 %r10
-JLE %r9
+# if r3 <= r10
+CMPU %r3 %r10
+JLS %r9
 # reset glyph pointer
 AND %r8 %r3
 .continue
@@ -133,9 +131,8 @@ JEQ %r9
 .glyph_loop
 # set glyph lower threshold
 ANDI $0 %r12
-ADDI $126 %r12
-ADDI $126 %r12
-ADDI $98 %r12
+ADDI $95 %r12
+LSHI $2 %r12
 
 LOAD %r0 %r11
 
@@ -198,8 +195,8 @@ ANDI $0 %r9
 ORI .glyph_loop %r9
 
 # if r11 <= glyph end threshold
-CMP %r11 %r10
-JLE %r9
+CMPU %r11 %r10
+JLS %r9
 
 #else - done with glyphs
 LOAD %r0 %r14
@@ -211,17 +208,19 @@ ANDI $0 %r9
 ORI .guitar_stuff %r9
 JUC %r9
 
+.glyph_next
+ADDI $1 %r11
+
 .glyph_move
 ANDI $0 %r9
 ORI .main_loop_start %r9
-CMP %r11 %r10
-JGT %r9
+CMPU %r11 %r10
+JHI %r9
 
 LOAD %r0 %r11
-ADDI $1 %r11
 
 ANDI $0 %r9
-ORI .glyph_move %r9
+ORI .glyph_next %r9
 
 # if glyph == 0, next glyph
 CMPI $0 %r0
@@ -256,7 +255,7 @@ ANDI $0 %r6
 STOR %r6 %r11
 
 ANDI $0 %r9
-ORI .glyph_move %r9
+ORI .glyph_next %r9
 JUC %r9
 
 

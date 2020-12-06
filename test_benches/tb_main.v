@@ -38,7 +38,7 @@ module tb_main();
 	
 	integer i;
 	initial begin
-		for (i = 61440; i < 61460; i = i + 1) begin
+		for (i = 61440; i <= 61460; i = i + 1) begin
 			ram[i] = 16'd0;
 		end
 		
@@ -54,6 +54,14 @@ module tb_main();
 		controller_in = 5'b0;
 		music_in = 5'b01100;
 		#10000;
+		music_in = 5'b10011;
+		#20000;
+		music_in = 5'b0;
+		#1457767;
+		controller_in = 5'b01100;
+		#20000;
+		controller_in = 5'b0;
+		#10000000;
 		$display("Testbench ends\n");
 	end
 

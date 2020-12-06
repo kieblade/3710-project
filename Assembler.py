@@ -191,6 +191,7 @@ class myClass():
     f = open(str(args[0]), 'r')
     out_name = str(args[1]) if len(args) >= 2 else str(args[0].rsplit('.', 1)[0] + '.b')
     wf = open(out_name, 'w')
+    sf = open('stripped.mc', 'w')
     # f = open('program.txt', 'r')
     # wf = open('data_file.txt', 'w')
 
@@ -199,6 +200,9 @@ class myClass():
         line = x.split('#')[0]
         parts = list(map(replaceLabel, line.split()))
         if ((len(parts) > 0) and (line[0] != '.')):
+            for part in parts:
+                sf.write(part + ' ')
+            sf.write('\n')
             address = address + 1
             instr = parts.pop(0)
             if (instr in RType):
