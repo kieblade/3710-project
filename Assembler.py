@@ -253,12 +253,10 @@ class myClass():
                     secondReg = parts.pop(0)
                     if ((Immd[0] in '$') and (secondReg in registers)):
                         immdInt = int(Immd.replace('$', ''))
-                        if ((immdInt > 15) or (-15 > immdInt)):
-                            sys.exit('Syntax Error: Immediate can not be larger then 15 or less then -15')
-                        elif (immdInt >= 0): 
+                        if ((immdInt > 15) or (0 > immdInt)):
+                            sys.exit('Syntax Error: Immediate can not be larger then 15 or less then 0')
+                        else:  
                             immediate = '{0:04b}'.format(immdInt)
-                        else:
-                            immediate = '{0:04b}'.format(((-1 * immdInt) ^ 15) + 1)
                         secondRegNum = '{0:04b}'.format(int(secondReg.replace('%r', '')))
                         data = '1000' + secondRegNum + instrCode(instr) + immediate
                         wf.write(data + '\n')
