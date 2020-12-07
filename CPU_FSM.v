@@ -104,7 +104,7 @@ module CPU_FSM (type, reset, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, 
 				begin
 					PCe = 0;
 					Lscntl = 0;
-					WE = 0;
+					WE = wb;
 					i_en = 0;
 					s_muxImm = 0;
 					reg_Wen = 0;
@@ -117,8 +117,8 @@ module CPU_FSM (type, reset, clk, PCe, Lscntl, WE, i_en, s_muxImm, wb, reg_Wen, 
 			S4:
 				begin
 					PCe = 0;
-					Lscntl = 0;
-					WE = wb;
+					Lscntl = 1;
+					WE = 0;
 					i_en = 0;
 					s_muxImm = 0;
 					reg_Wen = ~wb;

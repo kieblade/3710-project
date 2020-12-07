@@ -87,7 +87,7 @@ module CPU
 			dpram RAM(
 				.clk(clk),						// clock
 				.en_A(WE),						// port A enable
-				.en_B(en_B),					// port B enable
+				.en_B(0),						// port B enable
 				.addr_A(addr_A),				// port A address
 				.addr_B(addr_B),				// port B address
 				.data_A(mux_a_out),				// data into port A
