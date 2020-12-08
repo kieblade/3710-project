@@ -5,6 +5,7 @@ class myClass():
     args = sys.argv[1:]
     address = -1
     labels = {}
+    jpoint_instrs = {}
     RType = ['ADD', 'ADDU', 'ADDC', 'ADDCU', 'SUB', 'CMP', 'CMPU', 'AND', 'OR', 'XOR']
     Immediates = ['ADDI', 'ADDUI', 'ADDCI', 'ADDCUI', 'SUBI', 'CMPI', 'CMPUI', 'ANDI', 'ORI', 'XORI']
     Shift = ['LSH', 'RSH', 'ALSH', 'ARSH']
@@ -169,11 +170,18 @@ class myClass():
         return func()
     
     def replaceLabel(label):
-        if (label[0] == '.'):
-            return '$' + str(labels[label])
-        else:
-            return label
+	def r(l):
+	   if (l[0] == '.'):
+              return '$' + str(labels[l])
+	   else:
+              return l
 
+	if (label.startswith('JPT')):
+	    return label
+	else:
+	    m = map(r, label.split())
+	    return ' '.join(m)
+        
     f = open(str(args[0]), 'r')
 
     address = -1
@@ -183,9 +191,27 @@ class myClass():
         if (len(parts) > 0):
             if (line[0] == '.'):
                 labelAddress = address + 1
-                labels[parts.pop(0)] = labelAddress
-            else:
-                address = address + 1
+		if (labelAddress % 2 == 0):
+		   odd = False
+		else:
+		   odd = True
+		   labelAddress -= 1
+		count = 0
+		while labelAddress > 127:
+		   labelAddress /= 2
+		   count += 1
+		l = parts.pop(0)
+		jpoint_instrs[l] = {
+		   'initial_immd': labelAddress,
+		   'shift_count': count,
+		   'is_odd': odd	
+		}	
+                labels[l] = labelAddress
+            elif (parts[0] == 'JPT'):
+                address = address + 4
+	    else:
+		address = address + 1
+
     f.close()
 
     f = open(str(args[0]), 'r')
@@ -198,7 +224,7 @@ class myClass():
     address = -1
     for x in f:
         line = x.split('#')[0]
-        parts = list(map(replaceLabel, line.split()))
+	parts = replaceLabel(line).split()
         if ((len(parts) > 0) and (line[0] != '.')):
             for part in parts:
                 sf.write(part + ' ')
@@ -237,7 +263,7 @@ class myClass():
                     else:
                         sys.exit('Syntax Error: Immediate operations need an immd then a register')
                 else:
-                    sys.exit('Syntax Error: Immediate operations need two args')
+                    sys.exit('Syntax Error: Immediate operations need two args: ' + line)
             elif (instr in Shift):
                if (len(parts) == 2):
                     firstReg = parts.pop(0)
@@ -362,6 +388,31 @@ class myClass():
                     wf.write(data + '\n')
                else:
                    sys.exit('Syntax Error: load needs two args')
+	    # pseudo-instruction to point to jump addresses
+	    elif (instr == 'JPT'):
+		if (len(parts) != 2):
+		   sys.exit('Syntax Error: JPT needs a pointer and a register')
+		pointer = parts.pop(0)
+		reg = parts.pop(0)
+	    	if not jpoint_instrs.has_key(pointer):
+		   sys.exit('Syntax Error: pointer not found: ' + pointer)
+		if (reg not in registers):
+		   sys.exit('Invalid register')
+		instr_data = jpoint_instrs[pointer]
+		immediate = '{0:08b}'.format(instr_data['initial_immd'])
+		regNumber = '{0:04b}'.format(int(reg.replace('%r', '')))
+		shift_amt = '{0:04b}'.format(instr_data['shift_count'])
+		zero_out = instrCode('ANDI') + regNumber + '00000000'
+		or_in = instrCode('ORI') + regNumber + immediate
+		shift = '1000' + regNumber + instrCode('LSHI') + shift_amt
+		if instr_data['is_odd']:
+		   add = instrCode('ADDI') + regNumber + '00000001'
+		else:
+		   add = instrCode('ADDI') + regNumber + '00000000'
+		wf.write(zero_out + '\n')
+		wf.write(or_in + '\n')
+		wf.write(shift + '\n')
+		wf.write(add + '\n')
             else:
                 sys.exit('Syntax Error: not a valid instruction')
 

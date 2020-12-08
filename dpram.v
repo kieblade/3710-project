@@ -11,13 +11,13 @@ module dpram (
 	
 	initial
 	begin
-		$readmemb("./mem_files/vga-test.b", ram);
+		$readmemb("./mem_files/main.b", ram);
 		// Assuming data memory starts at 16'h1000
-		ram[16'hF000] = {4'h0, 12'd0};	// 1 fret
-		ram[16'hF001] = {4'h1, 12'd100};	// 2 fret
-		ram[16'hF002] = {4'h2, 12'd0};	// 3 fret
-		ram[16'hF003] = {4'h3, 12'd100};	// 4 fret
-		ram[16'hF004] = {4'h4, 12'd0};	// 5 fret
+		ram[16'hF000] = {4'h0, 12'd500};	// 1 fret
+		ram[16'hF001] = {4'h0, 12'd500};	// 2 fret
+		ram[16'hF002] = {4'h0, 12'd500};	// 3 fret
+		ram[16'hF003] = {4'h0, 12'd500};	// 4 fret
+		ram[16'hF004] = {4'h0, 12'd500};	// 5 fret
 		ram[16'hF005] = {4'h0, 12'd500};	// 6 fret
 		ram[16'hF006] = {4'h0, 12'd500};	// 7 fret
 		ram[16'hF007] = {4'h0, 12'd500};	// 8 fret

@@ -27,14 +27,10 @@ ADD %r9 %r9  # r9 = 400
 ADD %r10 %r9  # r9 = 500
 
 # Store lables in register
-ANDI $0 %r6
-ORI .load_position %r6 # r6 = load_position
-ANDI $0 %r7
-ORI .store_postition %r7 # r7 = store_position
-ANDI $0 %r8
-ORI .reset_fret %r8
-ANDI $0 %r12
-ORI .return %r12
+JPT .load_position %r6
+JPT .store_position %r7
+JPT .reset_fret %r8
+JPT .return %r12
 
 .load_position
 # Retrieve from memory
@@ -53,7 +49,7 @@ CMP %r11 %r9
 JGE %r12
 
 ANDI $0 %r5
-.store_postition
+.store_position
 # Store in memory
 ADDI $1 %r5
 CMP %r5 %r2

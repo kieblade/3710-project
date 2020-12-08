@@ -24,8 +24,24 @@ NOT %r14
 ANDI $0 %r9
 STOR %r9 %r14
 
-ANDI $0 %r9
-ORI .main_loop_start %r9
+JPT .main_loop_start %r9
+JUC %r9
+
+
+.busy_loop
+ANDI $0 %r0
+ORI $-1 %r0
+ANDI $0 %r0
+ANDI $0 %r1
+ORI $100 %r1
+LSHI $8 %r1
+.busy_loop_inner
+ADDI $1 %r0
+JPT .busy_loop_inner %r9
+CMPU %r0 %r1
+JLS %r9
+ANDI $0 %r0
+JPT .main_loop_start %r9
 JUC %r9
 
 .bump
@@ -33,8 +49,7 @@ ADDI $4 %r0
 STOR %r0 %r11
 
 # go home
-ANDI $0 %r9
-ORI .glyph_next %r9
+JPT .glyph_next %r9
 JUC %r9
 
 .main_loop_start
@@ -47,8 +62,7 @@ OR %r8 %r11
 .note_check
 SUBI $1 %r5
 
-ANDI $0 %r9
-ORI .guitar_stuff %r9
+JPT .guitar_stuff %r9
 
 # if r5 < 5 jump to guitar_stuff
 CMPI $5 %r5
@@ -62,8 +76,7 @@ ORI $1 %r4
 LSH %r5 %r4
 AND %r15 %r4
 
-ANDI $0 %r9
-ORI .note_check %r9
+JPT .note_check %r9
 
 CMPI $0 %r4
 JEQ %r9 # if r4 is 0, move to the next note
@@ -72,16 +85,14 @@ JEQ %r9 # if r4 is 0, move to the next note
 ANDI $0 %r6
 .count_loop
 # if r4 > 256
-ANDI $0 %r9
-ORI .count_loop_end %r9
+JPT .count_loop_end %r9
 CMP %r4 %r7
 JGT %r9
 # else
 LSHI $1 %r4
 ADDI $1 %r6
 
-ANDI $0 %r9
-ORI .count_loop %r9
+JPT .count_loop %r9
 JUC %r9
 .count_loop_end
 
@@ -90,8 +101,7 @@ ADDI $4 %r6
 STOR %r6 %r3
 ADDI $1 %r3
 
-ANDI $0 %r9
-ORI .continue %r9
+JPT .continue %r9
 
 # if r3 <= r10
 CMPU %r3 %r10
@@ -101,8 +111,7 @@ AND %r8 %r3
 .continue
 
 # jump back to note check
-ANDI $0 %r9
-ORI .note_check %r9
+JPT .note_check %r9
 JUC %r9
 
 # display
@@ -115,14 +124,12 @@ SUBI $1 %r5
 ANDI $0 %r11
 OR %r8 %r11
 
-ANDI $0 %r9
-ORI .glyph_move %r9
+JPT .glyph_move %r9
 CMPI $0 %r5
 JGT %r9
 
 AND %r15 %r4
-ANDI $0 %r9
-ORI .guitar_stuff %r9
+JPT .guitar_stuff %r9
 
 # if r4 == 0 move to check the next button
 CMPI $0 %r4
@@ -144,8 +151,7 @@ NOT %r13
 
 AND %r0 %r13
 
-ANDI $0 %r9
-ORI .glyph_loop_end %r9
+JPT .glyph_loop_end %r9
 # if pos < lower threshold
 CMP %r13 %r12
 JLT %r9
@@ -177,6 +183,8 @@ STOR %r0 %r14
 
 # delete glyph
 ANDI $0 %r0
+ADDI $125 %r0
+LSHI $2 %r0
 STOR %r0 %r11
 
 # reset glyph pointer
@@ -184,15 +192,13 @@ ANDI $0 %r11
 OR %r8 %r11
 
 # next button
-ANDI $0 %r9
-ORI .guitar_stuff %r9
+JPT .guitar_stuff %r9
 JUC %r9
 
 # if the button is pressed, but current glyph isn't right
 .glyph_loop_end
 ADDI $1 %r11
-ANDI $0 %r9
-ORI .glyph_loop %r9
+JPT .glyph_loop %r9
 
 # if r11 <= glyph end threshold
 CMPU %r11 %r10
@@ -204,26 +210,26 @@ SUBI $1 %r0
 STOR %r0 %r14
 
 # next button
-ANDI $0 %r9
-ORI .guitar_stuff %r9
+JPT .guitar_stuff %r9
 JUC %r9
 
 .glyph_next
 ADDI $1 %r11
 
 .glyph_move
-ANDI $0 %r9
-ORI .main_loop_start %r9
+JPT .busy_loop %r9
 CMPU %r11 %r10
 JHI %r9
 
 LOAD %r0 %r11
 
-ANDI $0 %r9
-ORI .glyph_next %r9
+JPT .glyph_next %r9
 
-# if glyph == 0, next glyph
-CMPI $0 %r0
+# if glyph == 500, next glyph
+ANDI $0 %r1
+ORI $125 %r1
+LSHI $2 %r1
+CMP %r0 %r1
 JEQ %r9
 
 # extract position
@@ -235,12 +241,11 @@ AND %r0 %r13
 
 # set end threshold
 ANDI $0 %r6
-ADDI $125 %r6
+ADDI $120 %r6
 LSHI $2 %r6
 
-ANDI $0 %r9
-ORI .bump %r9
-# if position < 500
+JPT .bump %r9
+# if position < 480
 CMP %r13 %r6
 JLT %r9
 #else
@@ -252,12 +257,12 @@ STOR %r6 %r14
 
 # delete glyph
 ANDI $0 %r6
+ADDI $125 %r6
+LSHI $2 %r6
 STOR %r6 %r11
 
-ANDI $0 %r9
-ORI .glyph_next %r9
+JPT .glyph_next %r9
 JUC %r9
-
 
 # cash money
 
