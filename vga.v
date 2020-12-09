@@ -1,3 +1,5 @@
+// Created by Kris Wolff
+// Modified by Seth Jackson
 module vga 
 #(parameter SYS_DATA_WIDTH=16, SYS_ADDR_WIDTH=16,
 				GLYPH_DATA_WIDTH=24, GLYPH_ADDR_WIDTH=8)

@@ -11,6 +11,8 @@
   *			 4k			|			 x2
   *			 8k			|			 x1
   */
+// Created by Kris Wolff
+// Modified by Seth Jackson
 module glyph_rom
 // will technically be x40 or x32
 #(parameter DATA_WIDTH=24, ADDR_WIDTH=8)

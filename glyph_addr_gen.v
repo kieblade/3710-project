@@ -1,3 +1,5 @@
+// Created by Kris Wolff
+// Modified by Seth Jackson
 module glyph_addr_gen 
 #(parameter GLYPH_DATA_WIDTH=24, SYS_DATA_WIDTH=18, 
 				SYS_ADDR_WIDTH=16, GLYPH_ADDR_WIDTH=16,

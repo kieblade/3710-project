@@ -1,3 +1,5 @@
+// Created by Kris Wolff
+// Modified by Seth Jackson
 module vga_control 
 #(parameter LOG2_DISPLAY_WIDTH=10, LOG2_DISPLAY_HEIGHT=10)
 (

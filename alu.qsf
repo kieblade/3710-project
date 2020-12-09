@@ -260,4 +260,53 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name VERILOG_FILE test_benches/tb_main.v
 set_global_assignment -name CDF_FILE output_files/Chain1.cdf
+set_global_assignment -name VERILOG_FILE hex_counter.v
+set_location_assignment PIN_AH28 -to dsp_7seg_0[6]
+set_location_assignment PIN_AG28 -to dsp_7seg_0[5]
+set_location_assignment PIN_AA24 -to dsp_7seg_4[0]
+set_location_assignment PIN_Y23 -to dsp_7seg_4[1]
+set_location_assignment PIN_Y24 -to dsp_7seg_4[2]
+set_location_assignment PIN_W22 -to dsp_7seg_4[3]
+set_location_assignment PIN_W24 -to dsp_7seg_4[4]
+set_location_assignment PIN_V23 -to dsp_7seg_4[5]
+set_location_assignment PIN_W25 -to dsp_7seg_4[6]
+set_location_assignment PIN_AD26 -to dsp_7seg_3[0]
+set_location_assignment PIN_AC27 -to dsp_7seg_3[1]
+set_location_assignment PIN_AD25 -to dsp_7seg_3[2]
+set_location_assignment PIN_AC25 -to dsp_7seg_3[3]
+set_location_assignment PIN_AB28 -to dsp_7seg_3[4]
+set_location_assignment PIN_AB25 -to dsp_7seg_3[5]
+set_location_assignment PIN_AB22 -to dsp_7seg_3[6]
+set_location_assignment PIN_AB23 -to dsp_7seg_2[0]
+set_location_assignment PIN_AE29 -to dsp_7seg_2[1]
+set_location_assignment PIN_AD29 -to dsp_7seg_2[2]
+set_location_assignment PIN_AC28 -to dsp_7seg_2[3]
+set_location_assignment PIN_AD30 -to dsp_7seg_2[4]
+set_location_assignment PIN_AC29 -to dsp_7seg_2[5]
+set_location_assignment PIN_AC30 -to dsp_7seg_2[6]
+set_location_assignment PIN_AJ29 -to dsp_7seg_1[0]
+set_location_assignment PIN_AH29 -to dsp_7seg_1[1]
+set_location_assignment PIN_AH30 -to dsp_7seg_1[2]
+set_location_assignment PIN_AG30 -to dsp_7seg_1[3]
+set_location_assignment PIN_AF29 -to dsp_7seg_1[4]
+set_location_assignment PIN_AF30 -to dsp_7seg_1[5]
+set_location_assignment PIN_AD27 -to dsp_7seg_1[6]
+set_location_assignment PIN_AE26 -to dsp_7seg_0[0]
+set_location_assignment PIN_AE27 -to dsp_7seg_0[1]
+set_location_assignment PIN_AE28 -to dsp_7seg_0[2]
+set_location_assignment PIN_AG27 -to dsp_7seg_0[3]
+set_location_assignment PIN_AF28 -to dsp_7seg_0[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to "dsp_7seg_3[2](n)"
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dsp_7seg_4
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r1[15]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to r2[15]
+set_location_assignment PIN_AA25 -to sign
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sign
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -5,6 +5,7 @@ module CPU
 	input reset,						// reset (resets the whole CPU and script sequence)
 	output [4:0] flagLEDs,			// flags
 	output [15:0] r1,
+	output [15:0] r2,
 	output write_en,
 	output [15:0] addr,
 	output [15:0] data_in,
@@ -15,7 +16,7 @@ module CPU
 );	
 
 	wire [15:0] mux_a_out, mux_b_out, instr, data_B, instr_out, out_A, imm, regEnable, mem_pc_out, gameInput;
-	wire [15:0] r0, /*r1 is and output to display output,*/ r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
+	wire [15:0] r0, /*r1 and r2 is and output to display output,*/ r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
 	wire [15:0] addr_A, next_pc, pc_mux_out, address;
 	wire [7:0] opcode;
 	wire [3:0] en_reg, s_muxA, s_muxB;
